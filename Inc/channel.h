@@ -30,11 +30,19 @@
 #define MOIRE_CHANNEL_H_
 
 #include "stmlib/stmlib.h"
-#include "gpio.h"
+#include "dac.h"
+#include "tim.h"
 
 using namespace stmlib;
 
 namespace moire {
+
+const uint16_t sine_wave_array[32] = {2047, 1648, 1264, 910, 600,  345,   
+                156, 39,  0,  39,  156,  345,  
+                600, 910, 1264, 1648, 2048, 2447,  
+                2831, 3185, 3495, 3750, 3939, 4056,  
+                4095, 4056, 3939, 3750, 3495, 3185,  
+                2831, 2447};  
 
 extern enum ChannelMode
 {
@@ -44,8 +52,9 @@ extern enum ChannelMode
 } ChannelMode;
 
 typedef struct ChannelDefinition {
-  GPIO_TypeDef* gpio;
-  uint16_t pin;
+  DAC_HandleTypeDef* dac;
+  uint32_t channel;
+  uint32_t alignment;
 };
 
 class Channel {
@@ -60,7 +69,7 @@ class Channel {
   
  private:
   float value = 0;
-  void Out();
+  void Out(uint32_t value);
   DISALLOW_COPY_AND_ASSIGN(Channel);
 };
 

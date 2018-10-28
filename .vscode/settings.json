@@ -24,6 +24,7 @@
         "xmemory": "c",
         "xmemory0": "c",
         "xstddef": "c",
-        "xtr1common": "c"
+        "xtr1common": "c",
+        "dac.h": "c"
     },
 }

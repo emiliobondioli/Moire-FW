@@ -41,16 +41,20 @@
 #include "stm32f3xx_hal.h"
 #include "adc.h"
 #include "dac.h"
+#include "dma.h"
+#include "tim.h"
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
 #include "moire.h"
+
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-Moire moire_sys;
+
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
+Moire moire_sys;
 
 /* USER CODE END PV */
 
@@ -95,11 +99,14 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_ADC1_Init();
   MX_DAC1_Init();
   MX_DAC2_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
   moire_sys.Init();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */

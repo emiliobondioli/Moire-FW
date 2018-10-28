@@ -13,9 +13,9 @@ UI ui;
 const int kNumChannels = 3;
 
 const ChannelDefinition channel_defs[] = {
-  { A_DAC_OUT_GPIO_Port, A_DAC_OUT_Pin },
-  { B_DAC_OUT_GPIO_Port, B_DAC_OUT_Pin },
-  { C_DAC_OUT_GPIO_Port, C_DAC_OUT_Pin }
+  { &hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R },
+  { &hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R },
+  { &hdac2, DAC_CHANNEL_1, DAC_ALIGN_12B_R }
 };
 
 
