@@ -99,7 +99,7 @@ int main(void)
   MX_DAC1_Init();
   MX_DAC2_Init();
   /* USER CODE BEGIN 2 */
-
+  moire_sys.Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */

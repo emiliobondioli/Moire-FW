@@ -30,6 +30,11 @@
 #define MOIRE_CHANNEL_H_
 
 #include "stmlib/stmlib.h"
+#include "gpio.h"
+
+using namespace stmlib;
+
+namespace moire {
 
 extern enum ChannelMode
 {
@@ -38,18 +43,24 @@ extern enum ChannelMode
     c=3
 } ChannelMode;
 
-namespace moire {
+typedef struct ChannelDefinition {
+  GPIO_TypeDef* gpio;
+  uint16_t pin;
+};
 
 class Channel {
  public:
   Channel() { }
   ~Channel() { }
   
-  void Init();
+  ChannelDefinition def;
+  void Init(ChannelDefinition _def);
   void Update();
   
   
  private:
+  float value = 0;
+  void Out();
   DISALLOW_COPY_AND_ASSIGN(Channel);
 };
 

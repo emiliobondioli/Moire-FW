@@ -62,6 +62,7 @@ Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c_ex.c \
 Src/system_stm32f3xx.c  
 
 CC_SOURCES	= $(wildcard **/*.cc)
+CC_SOURCES	+= $(wildcard Inc/stmlib/system/system_clock.cc)
 
 # ASM sources
 ASM_SOURCES =  \

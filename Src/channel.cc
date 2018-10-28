@@ -27,16 +27,22 @@
 // Channel class
 
 #include "channel.h"
+#include "dac.h"
 #include "stm32f3xx_hal.h"
 
 using namespace moire;
 
-void Channel::Init()
+void Channel::Init(ChannelDefinition _def)
 {
-  
+  def = _def;
 }
 
 void Channel::Update()
+{
+  HAL_DAC_SetValue(&hdac1, 0, DAC_ALIGN_12B_R, 45535);
+}
+
+void Channel::Out()
 {
 
 }

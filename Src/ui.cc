@@ -45,7 +45,7 @@ void UI::Init() {
 }
 
 void UI::Poll() {
-  system_clock.Tick();
+  //system_clock.Tick();
   switches_.Debounce();
 
   for (int i = 0; i < kNumSwitches; ++i) {
