@@ -1,0 +1,29 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "C_Cpp.addWorkspaceRootToIncludePath": true,
+    "C_Cpp.intelliSenseEngine": "Tag Parser",
+    "C_Cpp.errorSquiggles": "Enabled",
+    "files.associations": {
+        "system_clock.h": "c",
+        "xutility": "c",
+        "algorithm": "c",
+        "cmath": "c",
+        "cstddef": "c",
+        "cstdint": "c",
+        "cstdio": "c",
+        "cstdlib": "c",
+        "cstring": "c",
+        "cwchar": "c",
+        "exception": "c",
+        "initializer_list": "c",
+        "iosfwd": "c",
+        "limits": "c",
+        "new": "c",
+        "type_traits": "c",
+        "utility": "c",
+        "xmemory": "c",
+        "xmemory0": "c",
+        "xstddef": "c",
+        "xtr1common": "c"
+    },
+}

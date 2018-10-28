@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "openocd",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/Moire.elf",
+            "name": "Debug (OpenOCD)",
+            "device": "STM32F303K8",
+            "preLaunchTask": "make",
+            "runToMain": true,
+            "configFiles": [
+                "board/st_nucleo_f3.cfg"
+            ]
+        }
+    ]
+}

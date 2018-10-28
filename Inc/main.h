@@ -49,8 +49,6 @@
 
 /* Private define ------------------------------------------------------------*/
 
-#define MCO_Pin GPIO_PIN_0
-#define MCO_GPIO_Port GPIOF
 #define A_CV_IN_Pin GPIO_PIN_0
 #define A_CV_IN_GPIO_Port GPIOA
 #define B_CV_IN_Pin GPIO_PIN_1
