@@ -40,6 +40,17 @@ void Moire::Update() {
   ui.Poll();
   for(int i = 0; i < kNumChannels; i++)
   {
+    if (ui.switches().pressed(i))
+    {
+      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET);
+      if(channels[i]->GetChannelMode() == LFO) channels[i]->SetChannelMode(ENVELOPE);
+      else channels[i]->SetChannelMode(LFO);
+    }
+    else
+    {
+      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET);
+    }
     channels[i]->Update();
   }
+
 }

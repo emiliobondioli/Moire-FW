@@ -44,12 +44,12 @@ const uint16_t sine_wave_array[32] = {2047, 1648, 1264, 910, 600,  345,
                 4095, 4056, 3939, 3750, 3495, 3185,  
                 2831, 2447};  
 
-extern enum ChannelMode
+enum ChannelMode
 {
     LFO,
     ENVELOPE,
     CLOCK_DIVIDER
-} ChannelMode;
+};
 
 typedef struct ChannelDefinition {
   DAC_HandleTypeDef* dac;
@@ -65,9 +65,12 @@ class Channel {
   ChannelDefinition def;
   void Init(ChannelDefinition _def);
   void Update();
+  void SetChannelMode(ChannelMode _mode);
+  ChannelMode GetChannelMode();
   
   
  private:
+  ChannelMode mode = LFO;
   float value = 0;
   void Out();
   DISALLOW_COPY_AND_ASSIGN(Channel);

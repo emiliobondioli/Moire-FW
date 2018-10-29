@@ -37,7 +37,8 @@ void Channel::Init(ChannelDefinition _def)
 
 void Channel::Update()
 {
-  value += 0.1;
+  if(mode != LFO) value = 4095;
+  else value += 0.1;
   if(value >= 4096) value = 0;
   Out();
 }
@@ -47,4 +48,15 @@ void Channel::Out()
   uint32_t value_byte = value;
   HAL_DAC_SetValue(def.dac, def.channel, def.alignment, value_byte);
   //HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, value_byte);
+}
+
+void Channel::SetChannelMode(ChannelMode _mode)
+{
+  mode = _mode;
+  value = 0;
+}
+
+ChannelMode Channel::GetChannelMode()
+{
+  return mode;
 }
