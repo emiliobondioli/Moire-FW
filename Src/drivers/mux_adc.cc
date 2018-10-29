@@ -33,7 +33,7 @@
 namespace moire {
 
 /* static */
-uint8_t PotsAdc::mux_address_to_pot_index_[kNumMuxAddresses] = {
+uint8_t MuxAdc::mux_address_to_pot_index_[kNumMuxAddresses] = {
   0xff,
   2,
   4,
@@ -45,7 +45,7 @@ uint8_t PotsAdc::mux_address_to_pot_index_[kNumMuxAddresses] = {
 };
 
 /* static */
-uint8_t PotsAdc::mux_address_to_slider_index_[kNumMuxAddresses] = {
+uint8_t MuxAdc::mux_address_to_slider_index_[kNumMuxAddresses] = {
   3,
   2,
   1,
@@ -56,15 +56,15 @@ uint8_t PotsAdc::mux_address_to_slider_index_[kNumMuxAddresses] = {
   0xff,
 };
 
-void PotsAdc::Init() {
+void MuxAdc::Init() {
 
 }
 
-void PotsAdc::DeInit() {
+void MuxAdc::DeInit() {
 
 }
 
-void PotsAdc::Convert() {
+void MuxAdc::Convert() {
   if (conversion_done_) {
 
   } else {

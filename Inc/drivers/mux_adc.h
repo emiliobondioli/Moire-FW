@@ -41,10 +41,10 @@ enum AdcGroup {
   ADC_GROUP_SLIDER = kNumAdcChannels,
 };
 
-class PotsAdc {
+class MuxAdc {
  public:
-  PotsAdc() { }
-  ~PotsAdc() { }
+  MuxAdc() { }
+  ~MuxAdc() { }
   
   void Init();
   void DeInit();
@@ -77,7 +77,7 @@ class PotsAdc {
   static uint8_t mux_address_to_pot_index_[kNumMuxAddresses];
   static uint8_t mux_address_to_slider_index_[kNumMuxAddresses];
   
-  DISALLOW_COPY_AND_ASSIGN(PotsAdc);
+  DISALLOW_COPY_AND_ASSIGN(MuxAdc);
 };
 
 }  // namespace moire
