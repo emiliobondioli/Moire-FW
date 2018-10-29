@@ -65,7 +65,8 @@ Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_adc.c \
 Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_adc_ex.c 
 
 CC_SOURCES	= $(wildcard **/*.cc)
-CC_SOURCES	+= $(wildcard Inc/stmlib/system/system_clock.cc)
+CC_SOURCES	+= $(wildcard Src/drivers/*.cc)
+CC_SOURCES	+= Inc/stmlib/system/system_clock.cc
 
 # ASM sources
 ASM_SOURCES =  \
@@ -156,7 +157,7 @@ LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BU
 
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
-deb: 
+list: 
 	@echo $(CC_SOURCES)
 
 #######################################
