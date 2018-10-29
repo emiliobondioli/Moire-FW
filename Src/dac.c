@@ -66,7 +66,7 @@ void MX_DAC1_Init(void)
 
     /**DAC channel OUT1 config 
     */
-  sConfig.DAC_Trigger = DAC_TRIGGER_T6_TRGO;
+  sConfig.DAC_Trigger = DAC_TRIGGER_NONE;
   sConfig.DAC_OutputBuffer = DAC_OUTPUTBUFFER_ENABLE;
   if (HAL_DAC_ConfigChannel(&hdac1, &sConfig, DAC_CHANNEL_1) != HAL_OK)
   {
@@ -75,7 +75,6 @@ void MX_DAC1_Init(void)
 
     /**DAC channel OUT2 config 
     */
-  sConfig.DAC_Trigger = DAC_TRIGGER_NONE;
   sConfig.DAC_OutputSwitch = DAC_OUTPUTSWITCH_ENABLE;
   if (HAL_DAC_ConfigChannel(&hdac1, &sConfig, DAC_CHANNEL_2) != HAL_OK)
   {
@@ -165,10 +164,10 @@ void HAL_DAC_MspInit(DAC_HandleTypeDef* dacHandle)
     /**DAC2 GPIO Configuration    
     PA6     ------> DAC2_OUT1 
     */
-    GPIO_InitStruct.Pin = C_DAC_OUT_Pin;
+    GPIO_InitStruct.Pin = GPIO_PIN_6;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(C_DAC_OUT_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USER CODE BEGIN DAC2_MspInit 1 */
 
@@ -220,7 +219,7 @@ void HAL_DAC_MspDeInit(DAC_HandleTypeDef* dacHandle)
     /**DAC2 GPIO Configuration    
     PA6     ------> DAC2_OUT1 
     */
-    HAL_GPIO_DeInit(C_DAC_OUT_GPIO_Port, C_DAC_OUT_Pin);
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_6);
 
   /* USER CODE BEGIN DAC2_MspDeInit 1 */
 

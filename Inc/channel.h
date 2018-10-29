@@ -46,9 +46,9 @@ const uint16_t sine_wave_array[32] = {2047, 1648, 1264, 910, 600,  345,
 
 extern enum ChannelMode
 {
-    a=1,
-    b=2,
-    c=3
+    LFO,
+    ENVELOPE,
+    CLOCK_DIVIDER
 } ChannelMode;
 
 typedef struct ChannelDefinition {
@@ -69,7 +69,7 @@ class Channel {
   
  private:
   float value = 0;
-  void Out(uint32_t value);
+  void Out();
   DISALLOW_COPY_AND_ASSIGN(Channel);
 };
 

@@ -40,10 +40,9 @@ struct SwitchDefinition {
 };
 
 const SwitchDefinition switches[] = {
-  { SW_A_IN_GPIO_Port, SW_A_IN_Pin },
-  { SW_B_IN_GPIO_Port, SW_B_IN_Pin },
-  { SW_C_IN_GPIO_Port, SW_C_IN_Pin }
-};
+    {GPIOB, GPIO_PIN_7},
+    {GPIOB, GPIO_PIN_6},
+    {GPIOB, GPIO_PIN_4}};
 
 void Switches::Init() {
   fill(&switch_state_[0], &switch_state_[kNumSwitches], 0xff);

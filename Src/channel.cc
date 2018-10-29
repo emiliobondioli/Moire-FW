@@ -27,24 +27,24 @@
 // Channel class
 
 #include "channel.h"
-#include "stm32f3xx_hal.h"
 
 using namespace moire;
 
 void Channel::Init(ChannelDefinition _def)
 {
   def = _def;
-  HAL_TIM_Base_Start(&htim6);
-  HAL_DAC_Start(def.dac,def.channel);  
-  HAL_DAC_Start_DMA(def.dac, def.channel, (uint32_t*)sine_wave_array, 32, DAC_ALIGN_12B_R);  
 }
 
 void Channel::Update()
 {
-  Out(60000);
+  value += 0.1;
+  if(value >= 4096) value = 0;
+  Out();
 }
 
-void Channel::Out(uint32_t value)
+void Channel::Out()
 {
-  //HAL_DAC_SetValue(def.dac, def.channel, def.alignment, value);
+  uint32_t value_byte = value;
+  HAL_DAC_SetValue(def.dac, def.channel, def.alignment, value_byte);
+  //HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, value_byte);
 }

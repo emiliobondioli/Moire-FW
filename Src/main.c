@@ -100,11 +100,15 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-  MX_ADC1_Init();
   MX_DAC1_Init();
-  MX_DAC2_Init();
   MX_TIM6_Init();
+  MX_ADC1_Init();
+  MX_DAC2_Init();
   /* USER CODE BEGIN 2 */
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
+  HAL_DAC_Start(&hdac2, DAC_CHANNEL_1);
+
   moire_sys.Init();
 
   /* USER CODE END 2 */

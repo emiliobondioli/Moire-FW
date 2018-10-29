@@ -49,48 +49,14 @@
 
 /* Private define ------------------------------------------------------------*/
 
-#define A_CV_IN_Pin GPIO_PIN_0
-#define A_CV_IN_GPIO_Port GPIOA
-#define B_CV_IN_Pin GPIO_PIN_1
-#define B_CV_IN_GPIO_Port GPIOA
-#define C_CV_IN_Pin GPIO_PIN_2
-#define C_CV_IN_GPIO_Port GPIOA
-#define TME_SHAPE_IN_Pin GPIO_PIN_3
-#define TME_SHAPE_IN_GPIO_Port GPIOA
 #define A_DAC_OUT_Pin GPIO_PIN_4
 #define A_DAC_OUT_GPIO_Port GPIOA
 #define B_DAC_OUT_Pin GPIO_PIN_5
 #define B_DAC_OUT_GPIO_Port GPIOA
-#define C_DAC_OUT_Pin GPIO_PIN_6
-#define C_DAC_OUT_GPIO_Port GPIOA
-#define MUX_ADDR_1_Pin GPIO_PIN_7
-#define MUX_ADDR_1_GPIO_Port GPIOA
-#define B_TRIG_IN_Pin GPIO_PIN_0
-#define B_TRIG_IN_GPIO_Port GPIOB
-#define C_TRIG_IN_Pin GPIO_PIN_1
-#define C_TRIG_IN_GPIO_Port GPIOB
-#define MUX_ADDR_2_Pin GPIO_PIN_8
-#define MUX_ADDR_2_GPIO_Port GPIOA
-#define MUX_ADDR_3_Pin GPIO_PIN_9
-#define MUX_ADDR_3_GPIO_Port GPIOA
-#define A_GATE_OUT_Pin GPIO_PIN_10
-#define A_GATE_OUT_GPIO_Port GPIOA
-#define B_GATE_OUT_Pin GPIO_PIN_11
-#define B_GATE_OUT_GPIO_Port GPIOA
-#define C_GATE_OUT_Pin GPIO_PIN_12
-#define C_GATE_OUT_GPIO_Port GPIOA
 #define SWDIO_Pin GPIO_PIN_13
 #define SWDIO_GPIO_Port GPIOA
 #define SWCLK_Pin GPIO_PIN_14
 #define SWCLK_GPIO_Port GPIOA
-#define A_TRIG_IN_Pin GPIO_PIN_15
-#define A_TRIG_IN_GPIO_Port GPIOA
-#define SW_A_IN_Pin GPIO_PIN_4
-#define SW_A_IN_GPIO_Port GPIOB
-#define SW_B_IN_Pin GPIO_PIN_6
-#define SW_B_IN_GPIO_Port GPIOB
-#define SW_C_IN_Pin GPIO_PIN_7
-#define SW_C_IN_GPIO_Port GPIOB
 
 /* ########################## Assert Selection ############################## */
 /**

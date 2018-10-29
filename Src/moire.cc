@@ -13,11 +13,10 @@ UI ui;
 const int kNumChannels = 3;
 
 const ChannelDefinition channel_defs[] = {
-  { &hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R },
-  { &hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R },
-  { &hdac2, DAC_CHANNEL_1, DAC_ALIGN_12B_R }
+    {&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R},
+    {&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R},
+    {&hdac2, DAC_CHANNEL_1, DAC_ALIGN_12B_R}
 };
-
 
 Channel channel_a;
 Channel channel_b;
