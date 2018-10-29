@@ -59,6 +59,13 @@
 void MX_GPIO_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+typedef enum
+{
+  Bit_RESET = 0,
+  Bit_SET
+} BitAction;
+
+uint8_t GPIO_ReadInputDataBit(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
 
 /* USER CODE END Prototypes */
 

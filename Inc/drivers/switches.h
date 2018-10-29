@@ -30,6 +30,7 @@
 #define MOIRE_DRIVERS_SWITCHES_H_
 
 #include "stmlib/stmlib.h"
+#include "gpio.h"
 
 
 namespace moire {
