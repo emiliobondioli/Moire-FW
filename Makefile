@@ -62,7 +62,7 @@ Src/tim.c \
 Src/adc.c \
 Src/dma.c \
 Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_adc.c \
-Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_adc_ex.c
+Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_adc_ex.c 
 
 CC_SOURCES	= $(wildcard **/*.cc)
 CC_SOURCES	+= $(wildcard Inc/stmlib/system/system_clock.cc)

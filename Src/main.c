@@ -185,16 +185,30 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-int _write(int file, char *ptr, int len)
+
+typedef enum
 {
-  int DataIdx;
+  Bit_RESET = 0,
+  Bit_SET
+} BitAction;
 
-  for (DataIdx = 0; DataIdx < len; DataIdx++)
+uint8_t GPIO_ReadInputDataBit(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
+{
+  uint8_t bitstatus = 0x00;
+
+  /* Check the parameters */
+  assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+  assert_param(IS_GET_GPIO_PIN(GPIO_Pin));
+
+  if ((GPIOx->IDR & GPIO_Pin) != (uint32_t)Bit_RESET)
   {
-    ITM_SendChar(*ptr++);
+    bitstatus = (uint8_t)Bit_SET;
   }
-
-  return len;
+  else
+  {
+    bitstatus = (uint8_t)Bit_RESET;
+  }
+  return bitstatus;
 }
 /* USER CODE END 4 */
 

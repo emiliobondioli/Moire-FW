@@ -51,8 +51,8 @@ void Switches::Init() {
 void Switches::Debounce() {
   for (int i = 0; i < kNumSwitches; ++i) {
     const SwitchDefinition& definition = switches[i];
-    switch_state_[i] = (switch_state_[i] << 1) | \
-        HAL_GPIO_ReadPin(definition.gpio, definition.pin);
+    switch_state_[i] = (switch_state_[i] << 1) |
+        GPIO_ReadInputDataBit(definition.gpio, definition.pin);
   }
 }
 
