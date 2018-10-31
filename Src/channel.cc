@@ -37,9 +37,19 @@ void Channel::Init(ChannelDefinition _def)
 
 void Channel::Update()
 {
-  if(mode != LFO) value = 4095;
-  else value += 0.1;
-  if(value >= 4096) value = 0;
+  switch(mode)
+  {
+    case LFO:
+      value += 0.1;
+      if (value >= 4096) value = 0;
+      break;
+    case ENVELOPE:
+      value = 4095;
+    break;
+    case CLOCK_DIVIDER:
+      value = external;
+    break;
+  }
   Out();
 }
 
@@ -59,4 +69,9 @@ void Channel::SetChannelMode(ChannelMode _mode)
 ChannelMode Channel::GetChannelMode()
 {
   return mode;
+}
+
+void Channel::SetExternalValue(float _value)
+{
+  external = _value;
 }

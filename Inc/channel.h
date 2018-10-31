@@ -48,7 +48,8 @@ enum ChannelMode
 {
     LFO,
     ENVELOPE,
-    CLOCK_DIVIDER
+    CLOCK_DIVIDER,
+    NUM_MODES
 };
 
 typedef struct ChannelDefinition {
@@ -66,12 +67,13 @@ class Channel {
   void Init(ChannelDefinition _def);
   void Update();
   void SetChannelMode(ChannelMode _mode);
+  void SetExternalValue(float value);
   ChannelMode GetChannelMode();
-  
-  
- private:
+
+private:
   ChannelMode mode = LFO;
   float value = 0;
+  float external = 0;
   void Out();
   DISALLOW_COPY_AND_ASSIGN(Channel);
 };

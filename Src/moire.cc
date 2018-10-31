@@ -1,4 +1,5 @@
 #include "ui.h"
+#include "drivers/mux_adc.h"
 #include "channel.h"
 #include "stmlib/system/system_clock.h"
 #include "stm32f3xx_hal.h"
@@ -9,6 +10,7 @@ using namespace stmlib;
 using namespace moire;
 
 UI ui;
+MuxAdc mux;
 
 const int kNumChannels = 3;
 
@@ -30,6 +32,7 @@ Channel* channels[] = {
 
 void Moire::Init() {
   ui.Init();
+  mux.Init();
   for(int i = 0; i < kNumChannels; i++)
   {
     channels[i]->Init(channel_defs[i]);
@@ -43,8 +46,9 @@ void Moire::Update() {
     if (ui.switches().released(i))
     {
       HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET);
-      if(channels[i]->GetChannelMode() == LFO) channels[i]->SetChannelMode(ENVELOPE);
-      else channels[i]->SetChannelMode(LFO);
+      ChannelMode currentMode = channels[i]->GetChannelMode();
+      int newMode = currentMode + 1 < NUM_MODES ? currentMode + 1 : 0;
+      channels[i]->SetChannelMode(static_cast<ChannelMode>(newMode));
     }
     else
     {

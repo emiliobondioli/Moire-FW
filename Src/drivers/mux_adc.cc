@@ -33,34 +33,36 @@
 namespace moire {
 
 /* static */
-uint8_t MuxAdc::mux_address_to_pot_index_[kNumMuxAddresses] = {
-  0xff,
-  2,
-  4,
-  1,
-  3,
-  0,
-  0xff,
-  5,
+uint8_t MuxAdc::mux_address_to_pot_index_[kNumMuxPots] = {
+    1,
+    2,
+    3
 };
 
 /* static */
-uint8_t MuxAdc::mux_address_to_slider_index_[kNumMuxAddresses] = {
-  3,
-  2,
-  1,
-  4,
-  0,
-  0xff,
-  5,
-  0xff,
+uint8_t MuxAdc::mux_address_to_slider_index_[kNumMuxSliders] = {
+    4,
+    5,
+    6
 };
 
-void MuxAdc::Init() {
+uint16_t MuxAdc::aADCxConvertedData[ADC_CONVERTED_DATA_BUFFER_SIZE];
 
+void MuxAdc::Init() {
+    /* ### - 4 - Start conversion in DMA mode ################################# */
+    if (HAL_ADC_Start_DMA(&hadc1,
+                          (uint32_t *)aADCxConvertedData,
+                          ADC_CONVERTED_DATA_BUFFER_SIZE) != HAL_OK)
+    {
+        Error_Handler();
+    }
 }
 
 void MuxAdc::DeInit() {
+
+}
+
+void MuxAdc::Poll() {
 
 }
 

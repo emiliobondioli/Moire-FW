@@ -30,32 +30,33 @@
 #define MOIRE_DRIVERS_POTS_ADC_H_
 
 #include "stmlib/stmlib.h"
+#include "adc.h"
 
 namespace moire {
 
 const int kNumAdcChannels = 6;
-const int kNumMuxAddresses = 8;
+const int kNumMuxPots = 4;
+const int kNumMuxSliders = 4;
+const int kNumMuxAddresses = kNumMuxPots + kNumMuxSliders;
+const int ADC_CONVERTED_DATA_BUFFER_SIZE((uint32_t)32);
 
-enum AdcGroup {
-  ADC_GROUP_POT,
-  ADC_GROUP_SLIDER = kNumAdcChannels,
-};
-
-class MuxAdc {
- public:
+    class MuxAdc
+{
+public:
   MuxAdc() { }
   ~MuxAdc() { }
   
   void Init();
   void DeInit();
   void Convert();
+  void Poll();
 
-  inline int32_t value(AdcGroup group, int channel) const {
-    return static_cast<int32_t>(values_[channel + group]);
+  inline int32_t value(int channel) const {
+    return static_cast<int32_t>(values_[channel]);
   }
   
-  inline float float_value(AdcGroup group, int channel) const {
-    return static_cast<float>(value(group, channel)) / 65536.0f;
+  inline float float_value(int channel) const {
+    return static_cast<float>(value(channel)) / 65536.0f;
   }
   
   inline uint8_t pot_index() const {
@@ -68,14 +69,15 @@ class MuxAdc {
   
  private:
   uint16_t adc_values_[2];
-  uint16_t values_[ADC_GROUP_SLIDER + kNumAdcChannels];
+  uint16_t values_[kNumAdcChannels];
   int mux_address_;
   bool conversion_done_;
   uint8_t pot_index_;
   uint8_t slider_index_;
+  static uint16_t aADCxConvertedData[ADC_CONVERTED_DATA_BUFFER_SIZE];
   
-  static uint8_t mux_address_to_pot_index_[kNumMuxAddresses];
-  static uint8_t mux_address_to_slider_index_[kNumMuxAddresses];
+  static uint8_t mux_address_to_pot_index_[kNumMuxPots];
+  static uint8_t mux_address_to_slider_index_[kNumMuxSliders];
   
   DISALLOW_COPY_AND_ASSIGN(MuxAdc);
 };
