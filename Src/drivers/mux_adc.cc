@@ -46,33 +46,17 @@ uint8_t MuxAdc::mux_address_to_slider_index_[kNumMuxSliders] = {
     6
 };
 
-uint16_t MuxAdc::aADCxConvertedData[ADC_CONVERTED_DATA_BUFFER_SIZE];
+/* static */
+uint16_t MuxAdc::ADC1Values[kNumAdcChannels];
 
 void MuxAdc::Init() {
     /* ### - 4 - Start conversion in DMA mode ################################# */
     if (HAL_ADC_Start_DMA(&hadc1,
-                          (uint32_t *)aADCxConvertedData,
+                          (uint32_t *)ADC1ConvertedData,
                           ADC_CONVERTED_DATA_BUFFER_SIZE) != HAL_OK)
     {
         Error_Handler();
     }
-}
-
-void MuxAdc::DeInit() {
-
-}
-
-void MuxAdc::Poll() {
-
-}
-
-void MuxAdc::Convert() {
-  if (conversion_done_) {
-
-  } else {
-
-  }
-  conversion_done_ = !conversion_done_;
 }
 
 extern "C"
@@ -82,11 +66,10 @@ extern "C"
         for (int i = 0; i < kNumAdcChannels; i++)
         {
             int channel_sum = 0;
-            channel_sum += aADCxConvertedData[kNumAdcChannels * 2 * i + i];
-            channel_sum += aADCxConvertedData[kNumAdcChannels * 2 * i + i];
-            channel_sum += aADCxConvertedData[kNumAdcChannels * 2 * i + i];
-            channel_sum += aADCxConvertedData[kNumAdcChannels * 2 * i + i];
-             values_[i] = ;
+            for (int j = 0; j < ADC_NUM_SAMPLES; j++) {
+                channel_sum += ADC1ConvertedData[8 * j + i * 2];
+            }
+            MuxAdc::ADC1Values[i] = channel_sum / ADC_NUM_SAMPLES;
         }
     }
     void ADC_IRQHandler()

@@ -43,6 +43,8 @@ void Moire::Update() {
   ui.Poll();
   for(int i = 0; i < kNumChannels; i++)
   {
+    int val = mux.value(i);
+    channels[i]->SetExternalValue(val);
     if (ui.switches().released(i))
     {
       HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET);

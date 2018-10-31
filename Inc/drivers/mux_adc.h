@@ -38,21 +38,24 @@ const int kNumAdcChannels = 4;
 const int kNumMuxPots = 3;
 const int kNumMuxSliders = 3;
 const int kNumMuxAddresses = kNumMuxPots + kNumMuxSliders;
-const int ADC_CONVERTED_DATA_BUFFER_SIZE((uint32_t)32);
+const int ADC_NUM_SAMPLES = 4;
+const int ADC_CONVERTED_DATA_BUFFER_SIZE((uint32_t)16);
+static uint16_t ADC1ConvertedData[ADC_CONVERTED_DATA_BUFFER_SIZE];
 
-    class MuxAdc
+class MuxAdc
 {
 public:
   MuxAdc() { }
   ~MuxAdc() { }
   
   void Init();
-  void DeInit();
-  void Convert();
   void Poll();
 
   inline int32_t value(int channel) const {
-    return static_cast<int32_t>(values_[channel]);
+
+
+    int32_t v = ADC1Values[channel];
+    return static_cast<int32_t>(v);
   }
   
   inline float float_value(int channel) const {
@@ -66,16 +69,13 @@ public:
   inline uint8_t slider_index() const {
     return slider_index_;
   }
+  static uint16_t ADC1Values[kNumAdcChannels];
   
  private:
-  uint16_t adc_values_[2];
-  uint16_t values_[kNumAdcChannels];
   int mux_address_;
-  bool conversion_done_;
   uint8_t pot_index_;
   uint8_t slider_index_;
-  static uint16_t aADCxConvertedData[ADC_CONVERTED_DATA_BUFFER_SIZE];
-  
+
   static uint8_t mux_address_to_pot_index_[kNumMuxPots];
   static uint8_t mux_address_to_slider_index_[kNumMuxSliders];
   
