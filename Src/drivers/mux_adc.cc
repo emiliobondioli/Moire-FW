@@ -48,6 +48,7 @@ uint8_t MuxAdc::mux_address_to_slider_index_[kNumMuxSliders] = {
 
 /* static */
 uint16_t MuxAdc::ADC1Values[kNumAdcChannels];
+static uint16_t channel_offset = ADC_CONVERTED_DATA_BUFFER_SIZE / kNumAdcChannels;
 
 void MuxAdc::Init() {
     /* ### - 4 - Start conversion in DMA mode ################################# */
@@ -67,7 +68,7 @@ extern "C"
         {
             int channel_sum = 0;
             for (int j = 0; j < ADC_NUM_SAMPLES; j++) {
-                channel_sum += ADC1ConvertedData[4 * j + i];
+                channel_sum += ADC1ConvertedData[channel_offset * j + i * channel_offset / kNumAdcChannels];
             }
             MuxAdc::ADC1Values[i] = channel_sum / ADC_NUM_SAMPLES;
         }

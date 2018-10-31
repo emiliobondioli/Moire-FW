@@ -46,8 +46,8 @@ void Channel::Update()
     case ENVELOPE:
       value = 4095;
     break;
-    case CLOCK_DIVIDER:
-      value = external;
+    case SHAPE_VIEW:
+      value = shape;
     break;
   }
   Out();
@@ -55,9 +55,8 @@ void Channel::Update()
 
 void Channel::Out()
 {
-  uint32_t value_byte = value;
+  uint32_t value_byte = static_cast<uint32_t>(value);
   HAL_DAC_SetValue(def.dac, def.channel, def.alignment, value_byte);
-  //HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, value_byte);
 }
 
 void Channel::SetChannelMode(ChannelMode _mode)
@@ -71,7 +70,12 @@ ChannelMode Channel::GetChannelMode()
   return mode;
 }
 
-void Channel::SetExternalValue(float _value)
+void Channel::SetShapeValue(float _value)
 {
-  external = _value;
+  shape = _value;
+}
+
+void Channel::SetTimeValue(uint16_t _value)
+{
+  time = _value;
 }

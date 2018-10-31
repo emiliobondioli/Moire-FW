@@ -39,7 +39,7 @@ const int kNumMuxPots = 3;
 const int kNumMuxSliders = 3;
 const int kNumMuxAddresses = kNumMuxPots + kNumMuxSliders;
 const int ADC_NUM_SAMPLES = 4;
-const int ADC_CONVERTED_DATA_BUFFER_SIZE((uint32_t)16);
+const int ADC_CONVERTED_DATA_BUFFER_SIZE((uint32_t)32);
 static uint16_t ADC1ConvertedData[ADC_CONVERTED_DATA_BUFFER_SIZE];
 
 class MuxAdc
@@ -52,10 +52,7 @@ public:
   void Poll();
 
   inline int32_t value(int channel) const {
-
-
-    int32_t v = ADC1Values[channel];
-    return static_cast<int32_t>(v);
+    return static_cast<int32_t>(ADC1Values[channel]);
   }
   
   inline float float_value(int channel) const {

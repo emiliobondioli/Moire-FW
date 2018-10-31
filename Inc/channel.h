@@ -48,7 +48,7 @@ enum ChannelMode
 {
     LFO,
     ENVELOPE,
-    CLOCK_DIVIDER,
+    SHAPE_VIEW,
     NUM_MODES
 };
 
@@ -67,13 +67,15 @@ class Channel {
   void Init(ChannelDefinition _def);
   void Update();
   void SetChannelMode(ChannelMode _mode);
-  void SetExternalValue(float value);
+  void SetShapeValue(float value);
+  void SetTimeValue(uint16_t value);
   ChannelMode GetChannelMode();
 
 private:
   ChannelMode mode = LFO;
   float value = 0;
-  float external = 0;
+  float shape = 0;
+  uint16_t time = 0;
   void Out();
   DISALLOW_COPY_AND_ASSIGN(Channel);
 };
