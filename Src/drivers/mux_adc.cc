@@ -75,4 +75,24 @@ void MuxAdc::Convert() {
   conversion_done_ = !conversion_done_;
 }
 
+extern "C"
+{
+    void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
+    {
+        for (int i = 0; i < kNumAdcChannels; i++)
+        {
+            int channel_sum = 0;
+            channel_sum += aADCxConvertedData[kNumAdcChannels * 2 * i + i];
+            channel_sum += aADCxConvertedData[kNumAdcChannels * 2 * i + i];
+            channel_sum += aADCxConvertedData[kNumAdcChannels * 2 * i + i];
+            channel_sum += aADCxConvertedData[kNumAdcChannels * 2 * i + i];
+             values_[i] = ;
+        }
+    }
+    void ADC_IRQHandler()
+    {
+        HAL_ADC_IRQHandler(&hadc1);
+    }
+}
+
 }  // namespace moire

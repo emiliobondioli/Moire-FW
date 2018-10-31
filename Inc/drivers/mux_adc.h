@@ -34,9 +34,9 @@
 
 namespace moire {
 
-const int kNumAdcChannels = 6;
-const int kNumMuxPots = 4;
-const int kNumMuxSliders = 4;
+const int kNumAdcChannels = 4;
+const int kNumMuxPots = 3;
+const int kNumMuxSliders = 3;
 const int kNumMuxAddresses = kNumMuxPots + kNumMuxSliders;
 const int ADC_CONVERTED_DATA_BUFFER_SIZE((uint32_t)32);
 
