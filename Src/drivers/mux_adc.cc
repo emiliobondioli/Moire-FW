@@ -67,7 +67,7 @@ extern "C"
         {
             int channel_sum = 0;
             for (int j = 0; j < ADC_NUM_SAMPLES; j++) {
-                channel_sum += ADC1ConvertedData[8 * j + i * 2];
+                channel_sum += ADC1ConvertedData[4 * j + i];
             }
             MuxAdc::ADC1Values[i] = channel_sum / ADC_NUM_SAMPLES;
         }
