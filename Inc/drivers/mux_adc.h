@@ -39,7 +39,7 @@ const int kNumMuxPots = 3;
 const int kNumMuxSliders = 3;
 const int kNumMuxAddresses = kNumMuxPots + kNumMuxSliders;
 const int ADC_NUM_SAMPLES = 4;
-const int ADC_CONVERTED_DATA_BUFFER_SIZE((uint32_t)32);
+const int ADC_CONVERTED_DATA_BUFFER_SIZE = 32;
 static uint16_t ADC1ConvertedData[ADC_CONVERTED_DATA_BUFFER_SIZE];
 
 class MuxAdc

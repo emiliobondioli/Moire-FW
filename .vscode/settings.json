@@ -1,7 +1,6 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-    "C_Cpp.addWorkspaceRootToIncludePath": true,
-    "C_Cpp.intelliSenseEngine": "Tag Parser",
+    "C_Cpp.intelliSenseEngine": "Default",
     "C_Cpp.errorSquiggles": "Enabled",
     "files.associations": {
         "system_clock.h": "c",
