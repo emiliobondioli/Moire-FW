@@ -53,7 +53,7 @@ static uint16_t channel_offset = ADC_CONVERTED_DATA_BUFFER_SIZE / kNumAdcChannel
 void MuxAdc::Init() {
     /* ### - 4 - Start conversion in DMA mode ################################# */
     if (HAL_ADC_Start_DMA(&hadc1,
-                          uint32_t* ADC1ConvertedData,
+                          (uint32_t*) ADC1ConvertedData,
                           ADC_CONVERTED_DATA_BUFFER_SIZE) != HAL_OK)
     {
         Error_Handler();
