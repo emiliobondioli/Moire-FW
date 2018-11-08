@@ -77,6 +77,7 @@ private:
   ChannelMode mode = LFO;
   float value = 0;
   void Out();
+  void ProcessLFO();
   DISALLOW_COPY_AND_ASSIGN(Channel);
   ChannelParameters parameters;
 };

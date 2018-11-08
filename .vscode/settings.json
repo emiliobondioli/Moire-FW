@@ -24,6 +24,10 @@
         "xmemory0": "c",
         "xstddef": "c",
         "xtr1common": "c",
-        "dac.h": "c"
+        "dac.h": "c",
+        "istream": "cpp",
+        "optional": "cpp",
+        "ostream": "cpp",
+        "system_error": "cpp"
     },
 }

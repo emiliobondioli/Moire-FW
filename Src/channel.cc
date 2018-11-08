@@ -69,3 +69,8 @@ ChannelMode Channel::GetChannelMode()
 {
   return mode;
 }
+
+void Channel::ProcessLFO()
+{
+  
+}
