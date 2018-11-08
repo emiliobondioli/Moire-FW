@@ -47,7 +47,7 @@ void Channel::Update()
       value = 4095;
     break;
     case SHAPE_VIEW:
-      value = shape;
+      value = parameters.secondary;
     break;
   }
   Out();
@@ -68,14 +68,4 @@ void Channel::SetChannelMode(ChannelMode _mode)
 ChannelMode Channel::GetChannelMode()
 {
   return mode;
-}
-
-void Channel::SetShapeValue(float _value)
-{
-  shape = _value;
-}
-
-void Channel::SetTimeValue(uint16_t _value)
-{
-  time = _value;
 }

@@ -37,12 +37,11 @@ using namespace stmlib;
 
 namespace moire {
 
-const uint16_t sine_wave_array[32] = {2047, 1648, 1264, 910, 600,  345,   
-                156, 39,  0,  39,  156,  345,  
-                600, 910, 1264, 1648, 2048, 2447,  
-                2831, 3185, 3495, 3750, 3939, 4056,  
-                4095, 4056, 3939, 3750, 3495, 3185,  
-                2831, 2447};  
+struct ChannelParameters
+{
+  float primary;
+  float secondary;
+};
 
 enum ChannelMode
 {
@@ -67,17 +66,19 @@ class Channel {
   void Init(ChannelDefinition _def);
   void Update();
   void SetChannelMode(ChannelMode _mode);
-  void SetShapeValue(float value);
-  void SetTimeValue(uint16_t value);
   ChannelMode GetChannelMode();
+  void SetParameters(float primary, float secondary)
+  {
+    parameters.primary = primary;
+    parameters.secondary = secondary;
+  }
 
 private:
   ChannelMode mode = LFO;
   float value = 0;
-  float shape = 0;
-  uint16_t time = 0;
   void Out();
   DISALLOW_COPY_AND_ASSIGN(Channel);
+  ChannelParameters parameters;
 };
 
 }  // namespace moire

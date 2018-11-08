@@ -44,8 +44,7 @@ void Moire::Update() {
   for(int i = 0; i < kNumChannels; i++)
   {
     int val = mux.value(i);
-    channels[i]->SetShapeValue(val);
-    channels[i]->SetTimeValue(val);
+    channels[i]->SetParameters(val, val);
     if (ui.switches().released(i))
     {
       HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET);
