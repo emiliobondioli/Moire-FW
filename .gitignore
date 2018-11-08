@@ -45,3 +45,6 @@ build
 *_BETA.sch
 *_beta.brd
 *_BETA.brd
+
+compile_commands.json
+.vscode/c_cpp_properties.json

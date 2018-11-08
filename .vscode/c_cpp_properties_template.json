@@ -12,12 +12,12 @@
                 "_UNICODE"
             ],
             "windowsSdkVersion": "10.0.17134.0",
-            "compilerPath": "\"C:/Users/ebond/Code/stm32/gnu-arm-embedded-toolchain/bin/arm-none-eabi-g++.exe\" -fno-ms-extensions",
+            "compilerPath": "\"C:/Users/Emilio/Code/stm32/gnu-arm-embedded-toolchain/bin/arm-none-eabi-g++.exe\" -fno-ms-extensions",
             "compileCommands": "${workspaceFolder}/compile_commands.json",
             "cStandard": "c11",
             "cppStandard": "c++17",
             "intelliSenseMode": "msvc-x64"
         }
     ],
-    "version": 4
+    "version": 3
 }
