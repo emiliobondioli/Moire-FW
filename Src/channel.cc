@@ -35,8 +35,6 @@
 #include <cmath>
 #include <algorithm>
 
-#include "resources.h"
-
 using namespace moire;
 using namespace std;
 
@@ -86,15 +84,12 @@ float map(float x, float in_min, float in_max, float out_min, float out_max)
 
 void Channel::ProcessLFO()
 {
-  float inc = 1 / (MAX_TIME / parameters.primary) / kSampleRate;
-  phase += inc;
-  float slope = 1 / (4096 / parameters.secondary); 
-  float triangle = 0;
+  phase += 1 / (MAX_TIME / parameters.primary) / kSampleRate;
+  const float slope = 1 / (4096 / parameters.secondary); 
   if(phase < slope) {
-    triangle = map(phase, 0, slope, 0, 1);
+    value = map(phase, 0, slope, 0, 4096);
   } else {
-    triangle = map(phase, slope, 1, 1, 0);
+    value = map(phase, slope, 1, 4096, 0);
   }
-  value = triangle * 4096;
   if(phase >= 1.0) phase -= 1.0;
 }
