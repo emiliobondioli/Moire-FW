@@ -10,6 +10,7 @@ class Moire {
 
     void Update();
     void Init();
+    bool tick = 0;
   private:
 
 };

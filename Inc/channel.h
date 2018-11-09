@@ -37,6 +37,8 @@ using namespace stmlib;
 
 namespace moire {
 
+const float kSampleRate = 31250.0f;
+
 struct ChannelParameters
 {
   float primary;
@@ -76,10 +78,15 @@ class Channel {
 private:
   ChannelMode mode = LFO;
   float value = 0;
+  bool rising = true;
   void Out();
   void ProcessLFO();
   DISALLOW_COPY_AND_ASSIGN(Channel);
   ChannelParameters parameters;
+  float phase = 0;
+  const float MAX_TIME = 16;
+  const float phase_inc = (1 / MAX_TIME) / kSampleRate;
+  void ShapeLFO (float shape, size_t size);
 };
 
 }  // namespace moire

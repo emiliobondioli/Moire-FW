@@ -8,10 +8,10 @@
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,7 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-// 
+//
 // See http://creativecommons.org/licenses/MIT/ for more information.
 //
 // -----------------------------------------------------------------------------
@@ -27,8 +27,18 @@
 // Channel class
 
 #include "channel.h"
+#include "stmlib/dsp/dsp.h"
+#include "stmlib/dsp/parameter_interpolator.h"
+#include "stmlib/dsp/units.h"
+
+#include <cassert>
+#include <cmath>
+#include <algorithm>
+
+#include "resources.h"
 
 using namespace moire;
+using namespace std;
 
 void Channel::Init(ChannelDefinition _def)
 {
@@ -37,17 +47,16 @@ void Channel::Init(ChannelDefinition _def)
 
 void Channel::Update()
 {
-  switch(mode)
+  switch (mode)
   {
-    case LFO:
-      value += 0.1;
-      if (value >= 4096) value = 0;
-      break;
-    case ENVELOPE:
-      value = 4095;
+  case LFO:
+    ProcessLFO();
     break;
-    case SHAPE_VIEW:
-      value = parameters.secondary;
+  case ENVELOPE:
+    value = 4095;
+    break;
+  case SHAPE_VIEW:
+    value = parameters.secondary;
     break;
   }
   Out();
@@ -70,7 +79,22 @@ ChannelMode Channel::GetChannelMode()
   return mode;
 }
 
+float map(float x, float in_min, float in_max, float out_min, float out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
 void Channel::ProcessLFO()
 {
-  
+  float inc = 1 / (MAX_TIME / parameters.primary) / kSampleRate;
+  phase += inc;
+  float slope = 1 / (4096 / parameters.secondary); 
+  float triangle = 0;
+  if(phase < slope) {
+    triangle = map(phase, 0, slope, 0, 1);
+  } else {
+    triangle = map(phase, slope, 1, 1, 0);
+  }
+  value = triangle * 4096;
+  if(phase >= 1.0) phase -= 1.0;
 }

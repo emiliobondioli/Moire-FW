@@ -66,6 +66,8 @@
 /* #define USE_FULL_ASSERT    1U */
 
 /* USER CODE BEGIN Private defines */
+#define F_CPU 72000000
+#define UINT12_MAX 4096
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

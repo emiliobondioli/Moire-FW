@@ -17,46 +17,50 @@ const int kNumChannels = 3;
 const ChannelDefinition channel_defs[] = {
     {&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R},
     {&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R},
-    {&hdac2, DAC_CHANNEL_1, DAC_ALIGN_12B_R}
-};
+    {&hdac2, DAC_CHANNEL_1, DAC_ALIGN_12B_R}};
 
 Channel channel_a;
 Channel channel_b;
 Channel channel_c;
 
-Channel* channels[] = {
-  &channel_a,
-  &channel_b,
-  &channel_c
-};
+Channel *channels[] = {
+    &channel_a,
+    &channel_b,
+    &channel_c};
 
-void Moire::Init() {
+void Moire::Init()
+{
   ui.Init();
   mux.Init();
-  for(int i = 0; i < kNumChannels; i++)
+  for (int i = 0; i < kNumChannels; i++)
   {
     channels[i]->Init(channel_defs[i]);
   }
 }
 
-void Moire::Update() {
-  ui.Poll();
-  for(int i = 0; i < kNumChannels; i++)
+void Moire::Update()
+{
+  if (tick)
   {
-    int val = mux.value(i);
-    channels[i]->SetParameters(val, val);
-    if (ui.switches().released(i))
+    tick = 0;
+    ui.Poll();
+    for (int i = 0; i < kNumChannels; i++)
     {
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET);
-      ChannelMode currentMode = channels[i]->GetChannelMode();
-      int newMode = currentMode + 1 < NUM_MODES ? currentMode + 1 : 0;
-      channels[i]->SetChannelMode(static_cast<ChannelMode>(newMode));
+      int primary = mux.value(i);
+      int secondary = mux.value(i+1);
+      channels[i]->SetParameters(primary, secondary);
+      if (ui.switches().released(i))
+      {
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET);
+        ChannelMode currentMode = channels[i]->GetChannelMode();
+        int newMode = currentMode + 1 < NUM_MODES ? currentMode + 1 : 0;
+        channels[i]->SetChannelMode(static_cast<ChannelMode>(newMode));
+      }
+      else
+      {
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET);
+      }
+      channels[i]->Update();
     }
-    else
-    {
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET);
-    }
-    channels[i]->Update();
   }
-
 }
