@@ -87,6 +87,10 @@ private:
   const float MAX_TIME = 16;
   const float phase_inc = (1 / MAX_TIME) / kSampleRate;
   void ShapeLFO (float shape, size_t size);
+  inline float map(float x, float in_min, float in_max, float out_min, float out_max)
+  {
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  }
 };
 
 }  // namespace moire

@@ -77,11 +77,6 @@ ChannelMode Channel::GetChannelMode()
   return mode;
 }
 
-float map(float x, float in_min, float in_max, float out_min, float out_max)
-{
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
 void Channel::ProcessLFO()
 {
   phase += 1 / (MAX_TIME / parameters.primary) / kSampleRate;
@@ -90,6 +85,6 @@ void Channel::ProcessLFO()
     value = map(phase, 0, slope, 0, 4096);
   } else {
     value = map(phase, slope, 1, 4096, 0);
+    if(phase >= 1.0) phase -= 1.0;
   }
-  if(phase >= 1.0) phase -= 1.0;
 }
