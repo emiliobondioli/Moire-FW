@@ -40,6 +40,7 @@ const int kNumMuxSliders = 3;
 const int kNumMuxAddresses = kNumMuxPots + kNumMuxSliders;
 const int ADC_NUM_SAMPLES = 4;
 const int ADC_CONVERTED_DATA_BUFFER_SIZE = 32;
+
 static uint16_t ADC1ConvertedData[ADC_CONVERTED_DATA_BUFFER_SIZE];
 
 class MuxAdc
@@ -54,6 +55,10 @@ public:
   inline int32_t value(int channel) const {
     return static_cast<int32_t>(ADC1Values[channel]);
   }
+
+  inline int32_t value_mux(int channel) const {
+    return static_cast<int32_t>(MuxValues[channel]);
+  }
   
   inline float float_value(int channel) const {
     return static_cast<float>(value(channel)) / UINT12_MAX;
@@ -66,10 +71,12 @@ public:
   inline uint8_t slider_index() const {
     return slider_index_;
   }
+
+  static uint16_t mux_address;
   static uint16_t ADC1Values[kNumAdcChannels];
+  static uint16_t MuxValues[kNumMuxAddresses];
   
  private:
-  int mux_address_;
   uint8_t pot_index_;
   uint8_t slider_index_;
 

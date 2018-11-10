@@ -45,9 +45,11 @@ uint8_t MuxAdc::mux_address_to_slider_index_[kNumMuxSliders] = {
     5,
     6
 };
+uint16_t mux_address = 0;
 
 /* static */
 uint16_t MuxAdc::ADC1Values[kNumAdcChannels];
+uint16_t MuxAdc::MuxValues[kNumMuxAddresses];
 static uint16_t channel_offset = ADC_CONVERTED_DATA_BUFFER_SIZE / kNumAdcChannels;
 
 void MuxAdc::Init() {
@@ -64,14 +66,17 @@ extern "C"
 {
     void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
     {
+        int adc_value = 0;
         for (int i = 0; i < kNumAdcChannels; i++)
         {
             int channel_sum = 0;
             for (int j = 0; j < ADC_NUM_SAMPLES; j++) {
                 channel_sum += ADC1ConvertedData[channel_offset * j + i * channel_offset / kNumAdcChannels];
             }
-            MuxAdc::ADC1Values[i] = channel_sum / ADC_NUM_SAMPLES;
+            adc_value = channel_sum / ADC_NUM_SAMPLES;
+            MuxAdc::ADC1Values[i] = adc_value;
         }
+        MuxAdc::MuxValues[mux_address] = adc_value;
     }
     void ADC_IRQHandler()
     {

@@ -12,7 +12,7 @@ class Moire {
     void Init();
     bool tick = 0;
   private:
-
+    int AddCV(int param, int cv);
 };
 
 #endif /* __MOIRE_H__ */

@@ -61,6 +61,8 @@ typedef struct ChannelDefinition {
   uint32_t alignment;
   GPIO_TypeDef* gate_gpio;
   uint16_t gate_pin;
+  uint16_t primary_mux;
+  uint16_t secondary_mux;
 };
 
 class Channel {
