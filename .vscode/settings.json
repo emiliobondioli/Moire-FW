@@ -28,6 +28,8 @@
         "istream": "cpp",
         "optional": "cpp",
         "ostream": "cpp",
-        "system_error": "cpp"
+        "system_error": "cpp",
+        "gpio.h": "c",
+        "stm32f3xx_hal.h": "c"
     },
 }

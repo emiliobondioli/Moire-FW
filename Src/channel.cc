@@ -57,6 +57,7 @@ void Channel::Update()
     value = parameters.secondary;
     break;
   }
+  ProcessGate();
   Out();
 }
 
@@ -85,6 +86,21 @@ void Channel::ProcessLFO()
     value = map(phase, 0, slope, 0, 4096);
   } else {
     value = map(phase, slope, 1, 4096, 0);
-    if(phase >= 1.0) phase -= 1.0;
+  }
+}
+
+void Channel::ProcessGate()
+{
+  if(phase >= 1.0) {
+    phase -= 1.0;
+    HAL_GPIO_WritePin(def.gate_gpio, def.gate_pin, GPIO_PIN_SET);
+    gate_time = 0;
+  } 
+  if(gate_time >= 0) {
+    gate_time++;
+    if(gate_time > 100) {
+      HAL_GPIO_WritePin(def.gate_gpio, def.gate_pin, GPIO_PIN_RESET);
+      gate_time = -1;
+    }
   }
 }

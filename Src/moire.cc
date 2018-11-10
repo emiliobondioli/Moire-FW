@@ -4,6 +4,7 @@
 #include "stmlib/system/system_clock.h"
 #include "stm32f3xx_hal.h"
 #include "moire.h"
+#include "gpio.h"
 
 using namespace std;
 using namespace stmlib;
@@ -15,9 +16,9 @@ MuxAdc mux;
 const int kNumChannels = 3;
 
 const ChannelDefinition channel_defs[] = {
-    {&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R},
-    {&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R},
-    {&hdac2, DAC_CHANNEL_1, DAC_ALIGN_12B_R}};
+    {&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, GPIOA, GPIO_PIN_10},
+    {&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, GPIOA, GPIO_PIN_11},
+    {&hdac2, DAC_CHANNEL_1, DAC_ALIGN_12B_R, GPIOA, GPIO_PIN_12}};
 
 Channel channel_a;
 Channel channel_b;

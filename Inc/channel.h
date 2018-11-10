@@ -57,6 +57,8 @@ typedef struct ChannelDefinition {
   DAC_HandleTypeDef* dac;
   uint32_t channel;
   uint32_t alignment;
+  GPIO_TypeDef* gate_gpio;
+  uint16_t gate_pin;
 };
 
 class Channel {
@@ -78,18 +80,23 @@ class Channel {
 private:
   ChannelMode mode = LFO;
   float value = 0;
+  int32_t gate_time = 0;
   bool rising = true;
   void Out();
   void ProcessLFO();
+  void ProcessGate();
   DISALLOW_COPY_AND_ASSIGN(Channel);
   ChannelParameters parameters;
   float phase = 0;
   const float MAX_TIME = 16;
   const float phase_inc = (1 / MAX_TIME) / kSampleRate;
-  void ShapeLFO (float shape, size_t size);
   inline float map(float x, float in_min, float in_max, float out_min, float out_max)
   {
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  }
+  inline float mapLog(float x, float in_min, float in_max, float out_min, float out_max) {
+    //return in_min + logf(x / out_min) / logf(out_max/out_min) * (in_max-in_min);
+    return 0;
   }
 };
 
