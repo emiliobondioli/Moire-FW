@@ -56,7 +56,7 @@ public:
   }
   
   inline float float_value(int channel) const {
-    return static_cast<float>(value(channel)) / 65536.0f;
+    return static_cast<float>(value(channel)) / UINT12_MAX;
   }
   
   inline uint8_t pot_index() const {

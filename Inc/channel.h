@@ -32,17 +32,19 @@
 #include "stmlib/stmlib.h"
 #include "dac.h"
 #include "tim.h"
+#include <cmath>
+
 
 using namespace stmlib;
 
 namespace moire {
 
-const float kSampleRate = 31250.0f;
+const float_t kSampleRate = 31250.0f;
 
 struct ChannelParameters
 {
-  float primary;
-  float secondary;
+  float_t primary;
+  float_t secondary;
 };
 
 enum ChannelMode
@@ -71,7 +73,7 @@ class Channel {
   void Update();
   void SetChannelMode(ChannelMode _mode);
   ChannelMode GetChannelMode();
-  void SetParameters(float primary, float secondary)
+  void SetParameters(float_t primary, float_t secondary)
   {
     parameters.primary = primary;
     parameters.secondary = secondary;
@@ -79,7 +81,7 @@ class Channel {
 
 private:
   ChannelMode mode = LFO;
-  float value = 0;
+  float_t value = 0;
   int32_t gate_time = 0;
   bool rising = true;
   void Out();
@@ -87,16 +89,15 @@ private:
   void ProcessGate();
   DISALLOW_COPY_AND_ASSIGN(Channel);
   ChannelParameters parameters;
-  float phase = 0;
-  const float MAX_TIME = 16;
-  const float phase_inc = (1 / MAX_TIME) / kSampleRate;
-  inline float map(float x, float in_min, float in_max, float out_min, float out_max)
+  float_t phase = 0;
+  const float_t MAX_TIME = 16;
+  const float_t phase_inc = (1 / MAX_TIME) / kSampleRate;
+  inline float_t map(float_t x, float_t in_min, float_t in_max, float_t out_min, float_t out_max, float_t shape)
   {
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    return powf((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min, 1);
   }
-  inline float mapLog(float x, float in_min, float in_max, float out_min, float out_max) {
-    //return in_min + logf(x / out_min) / logf(out_max/out_min) * (in_max-in_min);
-    return 0;
+  inline float_t mapLog(float_t x, float_t in_min, float_t in_max, float_t out_min, float_t out_max) {
+    return out_min + log(x / in_min) / log(in_max/in_min) * (out_max-out_min);
   }
 };
 

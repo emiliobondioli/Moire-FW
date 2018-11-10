@@ -32,7 +32,6 @@
 #include "stmlib/dsp/units.h"
 
 #include <cassert>
-#include <cmath>
 #include <algorithm>
 
 using namespace moire;
@@ -81,11 +80,11 @@ ChannelMode Channel::GetChannelMode()
 void Channel::ProcessLFO()
 {
   phase += 1 / (MAX_TIME / parameters.primary) / kSampleRate;
-  const float slope = 1 / (4096 / parameters.secondary); 
+  const float_t slope = static_cast<float_t>(1 / (4028 / parameters.secondary)); 
   if(phase < slope) {
-    value = map(phase, 0, slope, 0, 4096);
+    value = map(phase, 0, slope, 0, 4096, 0.5 - slope);
   } else {
-    value = map(phase, slope, 1, 4096, 0);
+    value = map(phase, slope, 1, 4096, 0, slope - 0.5);
   }
 }
 
@@ -98,7 +97,7 @@ void Channel::ProcessGate()
   } 
   if(gate_time >= 0) {
     gate_time++;
-    if(gate_time > 100) {
+    if(gate_time > 25) {
       HAL_GPIO_WritePin(def.gate_gpio, def.gate_pin, GPIO_PIN_RESET);
       gate_time = -1;
     }
