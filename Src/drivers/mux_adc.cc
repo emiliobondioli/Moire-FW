@@ -27,7 +27,6 @@
 // Drivers for the 12-bit SAR ADC scanning pots and sliders.
 
 #include "drivers/mux_adc.h"
-
 #include "stm32f3xx_hal.h"
 
 namespace moire {

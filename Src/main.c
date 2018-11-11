@@ -47,6 +47,7 @@
 
 /* USER CODE BEGIN Includes */
 #include "moire.h"
+#include "io_buffer.h"
 
 /* USER CODE END Includes */
 
