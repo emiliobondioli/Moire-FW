@@ -42,7 +42,7 @@ void Channel::Init(ChannelDefinition _def)
   def = _def;
 }
 
-void Channel::Update()
+void Channel::Update(GateFlags* gate_flags, size_t size)
 {
   switch (mode)
   {

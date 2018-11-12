@@ -32,6 +32,7 @@
 #include "stmlib/stmlib.h"
 #include "dac.h"
 #include "tim.h"
+#include "stmlib/utils/gate_flags.h"
 #include <cmath>
 
 
@@ -72,7 +73,7 @@ class Channel {
   
   ChannelDefinition def;
   void Init(ChannelDefinition _def);
-  void Update();
+  void Update(GateFlags* gate_flags, size_t size);
   void SetChannelMode(ChannelMode _mode);
   ChannelMode GetChannelMode();
   void SetParameters(float_t primary, float_t secondary)

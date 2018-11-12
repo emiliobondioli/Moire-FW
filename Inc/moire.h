@@ -11,6 +11,7 @@ class Moire {
     void Update();
     void Init();
     bool tick = 0;
+    static size_t current_channel;
   private:
     int AddCV(int param, int cv);
 };

@@ -43,12 +43,7 @@ const size_t kNumChannels = 3;
 class IOBuffer {
  public:
   struct Block {
-    float cv_slider[kNumChannels];
-    float pot[kNumChannels];
-    bool input_patched[kNumChannels];
-    
     stmlib::GateFlags input[kNumChannels][kBlockSize];
-    uint16_t output[kNumChannels][kBlockSize];
   };
   
   struct Slice {
