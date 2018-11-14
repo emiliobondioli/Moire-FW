@@ -30,6 +30,7 @@
 #define MOIRE_CHANNEL_H_
 
 #include "stmlib/stmlib.h"
+#include "stmlib/dsp/hysteresis_quantizer.h"
 #include "dac.h"
 #include "tim.h"
 #include "stmlib/utils/gate_flags.h"
@@ -71,6 +72,11 @@ typedef struct ChannelDefinition {
   uint16_t secondary_mux;
 };
 
+struct Ratio {
+  float ratio;  // Precomputed p/q
+  int q;
+};
+
 class Channel {
  public:
   Channel() { }
@@ -92,19 +98,24 @@ private:
   ChannelMode mode = LFO;
   float_t value = 0;
   int32_t gate_time = 0;
-  bool rising = true;
+  bool reset = true;
   void Out();
-  void ProcessLFO();
+  void ProcessFreeLFO();
   void ProcessTapLFO(float_t _phase_inc);
+  void ShapeLFO();
   void ProcessGate();
+  void ResetPhase();
   DISALLOW_COPY_AND_ASSIGN(Channel);
   ChannelParameters parameters;
+  stmlib::HysteresisQuantizer ramp_division_quantizer_;
   float_t phase = 0;
   const float_t MAX_TIME = 16;
+
   inline float_t map(float_t x, float_t in_min, float_t in_max, float_t out_min, float_t out_max, float_t shape)
   {
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
   }
+
   inline float_t mapLog(float_t x, float_t in_min, float_t in_max, float_t out_min, float_t out_max) {
     return out_min + log(x / in_min) / log(in_max/in_min) * (out_max-out_min);
   }

@@ -40,6 +40,7 @@ using namespace std;
 void Channel::Init(ChannelDefinition _def)
 {
   def = _def;
+  ramp_division_quantizer_.Init();
   input.Init(def.input_gpio, def.input_pin);
 }
 
@@ -49,7 +50,7 @@ void Channel::Update()
   switch (mode)
   {
   case LFO:
-    ProcessLFO();
+    ProcessFreeLFO();
     break;
   case ENVELOPE:
     value = 4095;
@@ -61,6 +62,7 @@ void Channel::Update()
     ProcessTapLFO(input.phase_inc);
     break;
   }
+  if(phase >= 1.0) ResetPhase();
   ProcessGate();
   Out();
 }
@@ -83,9 +85,34 @@ ChannelMode Channel::GetChannelMode()
   return mode;
 }
 
-void Channel::ProcessLFO()
+void Channel::ProcessFreeLFO()
 {
   phase += 1 / (MAX_TIME / parameters.primary) / kSampleRate;
+  const float_t slope = static_cast<float_t>(1 / (4028 / parameters.secondary)); 
+  ShapeLFO();
+}
+
+Ratio divider_ratios[] = {
+  { 0.249999f, 4 },
+  { 0.333333f, 3 },
+  { 0.499999f, 2 },
+  { 1, 1 },
+  { 1.999999f, 1 },
+  { 2.999999f, 1 },
+  { 3.999999f, 1 },
+};
+
+void Channel::ProcessTapLFO(float_t _phase_inc)
+{
+  Ratio r = ramp_division_quantizer_.Lookup(divider_ratios, (parameters.primary / 4028.0) * 1.03f, 7);
+  if(r.ratio >= 1 && input.clocked) ResetPhase();
+  phase += _phase_inc * r.ratio;
+  const float_t slope = static_cast<float_t>(1 / (4028 / parameters.secondary)); 
+  ShapeLFO();
+}
+
+void Channel::ShapeLFO()
+{
   const float_t slope = static_cast<float_t>(1 / (4028 / parameters.secondary)); 
   if(phase < slope) {
     value = map(phase, 0, slope, 0, 4096, 0.5 - slope);
@@ -94,21 +121,17 @@ void Channel::ProcessLFO()
   }
 }
 
-void Channel::ProcessTapLFO(float_t _phase_inc)
+
+void Channel::ResetPhase()
 {
-  phase += _phase_inc;
-  const float_t slope = static_cast<float_t>(1 / (4028 / parameters.secondary)); 
-  if(phase < slope) {
-    value = map(phase, 0, slope, 0, 4096, 0.5 - slope);
-  } else {
-    value = map(phase, slope, 1, 4096, 0, slope - 0.5);
-  }
+  phase = 0.0;
+  reset = 1;
 }
 
 void Channel::ProcessGate()
 {
-  if(phase >= 1.0) {
-    phase -= 1.0;
+  if(reset) {
+    reset = 0;
     HAL_GPIO_WritePin(def.gate_gpio, def.gate_pin, GPIO_PIN_SET);
     gate_time = 0;
   } 

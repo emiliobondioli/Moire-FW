@@ -53,8 +53,9 @@ void GateInput::Read(const float_t sample_rate) {
       pulses++;
     }
     current_state = state;
+  } else {
+    clocked = false;
   }
-  clocked = false;
   timer++;
   if(timer > period) {
     phase_inc =  static_cast<float_t>(1.0 / timer);
