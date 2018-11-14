@@ -33,6 +33,8 @@
 #include "dac.h"
 #include "tim.h"
 #include "stmlib/utils/gate_flags.h"
+#include "drivers/gate_input.h"
+
 #include <cmath>
 
 
@@ -53,6 +55,7 @@ enum ChannelMode
     LFO,
     ENVELOPE,
     SHAPE_VIEW,
+    TAP_LFO,
     NUM_MODES
 };
 
@@ -62,6 +65,8 @@ typedef struct ChannelDefinition {
   uint32_t alignment;
   GPIO_TypeDef* gate_gpio;
   uint16_t gate_pin;
+  GPIO_TypeDef* input_gpio;
+  uint16_t input_pin;
   uint16_t primary_mux;
   uint16_t secondary_mux;
 };
@@ -73,7 +78,7 @@ class Channel {
   
   ChannelDefinition def;
   void Init(ChannelDefinition _def);
-  void Update(GateFlags* gate_flags, size_t size);
+  void Update();
   void SetChannelMode(ChannelMode _mode);
   ChannelMode GetChannelMode();
   void SetParameters(float_t primary, float_t secondary)
@@ -81,6 +86,7 @@ class Channel {
     parameters.primary = primary;
     parameters.secondary = secondary;
   }
+  GateInput input;
 
 private:
   ChannelMode mode = LFO;
@@ -89,15 +95,15 @@ private:
   bool rising = true;
   void Out();
   void ProcessLFO();
+  void ProcessTapLFO(float_t _phase_inc);
   void ProcessGate();
   DISALLOW_COPY_AND_ASSIGN(Channel);
   ChannelParameters parameters;
   float_t phase = 0;
   const float_t MAX_TIME = 16;
-  const float_t phase_inc = (1 / MAX_TIME) / kSampleRate;
   inline float_t map(float_t x, float_t in_min, float_t in_max, float_t out_min, float_t out_max, float_t shape)
   {
-    return powf((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min, 1);
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
   }
   inline float_t mapLog(float_t x, float_t in_min, float_t in_max, float_t out_min, float_t out_max) {
     return out_min + log(x / in_min) / log(in_max/in_min) * (out_max-out_min);

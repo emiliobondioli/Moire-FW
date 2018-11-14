@@ -24,77 +24,42 @@
 //
 // -----------------------------------------------------------------------------
 //
-// I/O Buffering.
+// Driver for the six gate/trigger inputs.
 
-#ifndef MOIRE_IO_BUFFER_H_
-#define MOIRE_IO_BUFFER_H_
+#ifndef MOIRE_DRIVERS_GATE_INPUTS_H_
+#define MOIRE_DRIVERS_GATE_INPUTS_H_
 
 #include "stmlib/stmlib.h"
-#include "stmlib/utils/gate_flags.h"
-
-#include <algorithm>
+#include <cmath>
+#include "gpio.h"
 
 namespace moire {
 
-const size_t kNumBlocks = 2;
-const size_t kBlockSize = 8;
-const size_t kNumChannels = 3;
+typedef struct GateInputDefinition {
+  GPIO_TypeDef* gpio;
+  uint16_t pin;
+};
 
-class IOBuffer {
+class GateInput {
  public:
-  struct Block {
-    stmlib::GateFlags input[kNumChannels][kBlockSize];
-  };
-  
-  struct Slice {
-    Block* block;
-    size_t frame_index;
-  };
+  GateInput() { }
+  ~GateInput() { }
+ 
+  float_t phase_inc;
+  GPIO_PinState current_state;
+  bool clocked = false;
 
-  typedef void ProcessFn(Block* block, size_t size);
-
-  IOBuffer() { }
-  ~IOBuffer() { }
-  
-  void Init() {
-    io_block_ = 0;
-    render_block_ = kNumBlocks / 2;
-    io_frame_ = 0;
-  }
-  
-  inline void Process(ProcessFn* fn) {
-    while (render_block_ != io_block_) {
-      (*fn)(&block_[render_block_], kBlockSize);
-      render_block_ = (render_block_ + 1) % kNumBlocks;
-    }
-  }
-  
-  inline Slice NextSlice(size_t size) {
-    Slice s;
-    s.block = &block_[io_block_];
-    s.frame_index = io_frame_;
-    io_frame_ += size;
-    if (io_frame_ >= kBlockSize) {
-      io_frame_ -= kBlockSize;
-      io_block_ = (io_block_ + 1) % kNumBlocks;
-    }
-    return s;
-  }
-  
-  inline bool new_block() const {
-    return io_frame_ == 0;
-  }
+  void Init(GPIO_TypeDef* input_gpio, uint16_t input_pin);
+  void Read(const float_t sample_rate);
   
  private:
-  Block block_[kNumBlocks];
-  
-  size_t io_frame_;
-  volatile size_t io_block_;
-  volatile size_t render_block_;
-  
-  DISALLOW_COPY_AND_ASSIGN(IOBuffer);
+  uint8_t pulses;
+  uint32_t timer;
+  uint32_t period;
+  GateInputDefinition def;
+  DISALLOW_COPY_AND_ASSIGN(GateInput);
 };
 
 }  // namespace moire
 
-#endif  // MOIRE_IO_BUFFER_H_
+#endif  // MOIRE_DRIVERS_GATE_INPUTS_H_

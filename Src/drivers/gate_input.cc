@@ -26,33 +26,39 @@
 //
 // Driver for the six gate/trigger inputs.
 
-#ifndef MOIRE_DRIVERS_GATE_INPUTS_H_
-#define MOIRE_DRIVERS_GATE_INPUTS_H_
-
-#include "stmlib/stmlib.h"
-#include "io_buffer.h"
+#include "drivers/gate_input.h"
+#include "stm32f3xx_hal.h"
 
 namespace moire {
-  
-class GateInputs {
- public:
-  GateInputs() { }
-  ~GateInputs() { }
-  
-  void Init();
-  void Read(const IOBuffer::Slice& slice, size_t size);
-  
-  inline bool value(int i) const {
-    return previous_flags_[i] & stmlib::GATE_FLAG_HIGH;
+
+using namespace std;
+using namespace stmlib;
+
+void GateInput::Init(GPIO_TypeDef* input_gpio, uint16_t input_pin) {
+  def.gpio = input_gpio;
+  def.pin = input_pin;
+}
+
+void GateInput::Read(const float_t sample_rate) {
+  GPIO_PinState state = HAL_GPIO_ReadPin(def.gpio, def.pin);
+  if(state != current_state) {
+    if(current_state == GPIO_PIN_RESET) {
+      if(pulses > 0) {
+        pulses = 0;
+        phase_inc =  static_cast<float_t>(1.0 / timer);
+        clocked = true;
+        period = timer;
+      }
+      timer = 0;
+      pulses++;
+    }
+    current_state = state;
   }
-  
- private:
-
-  stmlib::GateFlags previous_flags_[kNumChannels];
-
-  DISALLOW_COPY_AND_ASSIGN(GateInputs);
-};
+  clocked = false;
+  timer++;
+  if(timer > period) {
+    phase_inc =  static_cast<float_t>(1.0 / timer);
+  }
+}
 
 }  // namespace moire
-
-#endif  // MOIRE_DRIVERS_GATE_INPUTS_H_

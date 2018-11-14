@@ -40,10 +40,12 @@ using namespace std;
 void Channel::Init(ChannelDefinition _def)
 {
   def = _def;
+  input.Init(def.input_gpio, def.input_pin);
 }
 
-void Channel::Update(GateFlags* gate_flags, size_t size)
+void Channel::Update()
 {
+  input.Read(kSampleRate);
   switch (mode)
   {
   case LFO:
@@ -54,6 +56,9 @@ void Channel::Update(GateFlags* gate_flags, size_t size)
     break;
   case SHAPE_VIEW:
     value = parameters.secondary;
+    break;
+  case TAP_LFO:
+    ProcessTapLFO(input.phase_inc);
     break;
   }
   ProcessGate();
@@ -70,6 +75,7 @@ void Channel::SetChannelMode(ChannelMode _mode)
 {
   mode = _mode;
   value = 0;
+  phase = 0;
 }
 
 ChannelMode Channel::GetChannelMode()
@@ -80,6 +86,17 @@ ChannelMode Channel::GetChannelMode()
 void Channel::ProcessLFO()
 {
   phase += 1 / (MAX_TIME / parameters.primary) / kSampleRate;
+  const float_t slope = static_cast<float_t>(1 / (4028 / parameters.secondary)); 
+  if(phase < slope) {
+    value = map(phase, 0, slope, 0, 4096, 0.5 - slope);
+  } else {
+    value = map(phase, slope, 1, 4096, 0, slope - 0.5);
+  }
+}
+
+void Channel::ProcessTapLFO(float_t _phase_inc)
+{
+  phase += _phase_inc;
   const float_t slope = static_cast<float_t>(1 / (4028 / parameters.secondary)); 
   if(phase < slope) {
     value = map(phase, 0, slope, 0, 4096, 0.5 - slope);
