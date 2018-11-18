@@ -17,7 +17,7 @@ MuxAdc mux;
 const ChannelDefinition channel_defs[] = {
     {&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, GPIOA, GPIO_PIN_10, GPIOB, GPIO_PIN_0, 0, 0},
     {&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, GPIOA, GPIO_PIN_11, GPIOB, GPIO_PIN_1, 1, 4},
-    {&hdac2, DAC_CHANNEL_1, DAC_ALIGN_12B_R, GPIOA, GPIO_PIN_12, GPIOA, GPIO_PIN_15, 2, 5}
+    {&hdac2, DAC_CHANNEL_1, DAC_ALIGN_12B_R, GPIOA, GPIO_PIN_11, GPIOA, GPIO_PIN_15, 2, 5}
 };
 
 Channel channel_a;
@@ -54,14 +54,9 @@ void Moire::Update()
       channels[i]->SetParameters(primary, secondary);
       if (ui.switches().released(i))
       {
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET);
         ChannelMode currentMode = channels[i]->GetChannelMode();
         int newMode = currentMode + 1 < NUM_MODES ? currentMode + 1 : 0;
         channels[i]->SetChannelMode(static_cast<ChannelMode>(newMode));
-      }
-      else
-      {
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET);
       }
       channels[i]->Update();
     }

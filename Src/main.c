@@ -42,6 +42,7 @@
 #include "adc.h"
 #include "dac.h"
 #include "dma.h"
+#include "spi.h"
 #include "tim.h"
 #include "gpio.h"
 
@@ -106,6 +107,7 @@ int main(void)
   MX_DAC2_Init();
   MX_TIM7_Init();
   MX_TIM2_Init();
+  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
   HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);

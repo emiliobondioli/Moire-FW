@@ -34,6 +34,11 @@
 
 namespace moire {
 
+typedef struct MuxAddressOutputDefinition {
+  GPIO_TypeDef* gpio;
+  uint16_t pin;
+};
+
 const int kNumAdcChannels = 4;
 const int kNumMuxPots = 3;
 const int kNumMuxSliders = 3;

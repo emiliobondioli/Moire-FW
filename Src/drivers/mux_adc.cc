@@ -46,6 +46,12 @@ uint8_t MuxAdc::mux_address_to_slider_index_[kNumMuxSliders] = {
 };
 uint16_t mux_address = 0;
 
+const MuxAddressOutputDefinition muxAddressOutputs[] = {
+    {GPIOA, GPIO_PIN_7},
+    {GPIOA, GPIO_PIN_8},
+    {GPIOA, GPIO_PIN_9}
+};
+
 /* static */
 uint16_t MuxAdc::ADC1Values[kNumAdcChannels];
 uint16_t MuxAdc::MuxValues[kNumMuxAddresses];
@@ -61,6 +67,9 @@ void MuxAdc::Init() {
     }
 }
 
+uint16_t mux_readings = 0;
+uint16_t mux_addresses[] = {0,1,2,3,4,6};
+
 extern "C"
 {
     void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *AdcHandle)
@@ -75,7 +84,18 @@ extern "C"
             adc_value = channel_sum / ADC_NUM_SAMPLES;
             MuxAdc::ADC1Values[i] = adc_value;
         }
-        MuxAdc::MuxValues[mux_address] = adc_value;
+        if(mux_readings >= ADC_NUM_SAMPLES-1) MuxAdc::MuxValues[mux_address] = adc_value;
+        mux_readings++;
+        if(mux_readings >= ADC_NUM_SAMPLES) {
+            mux_address++;
+            if(mux_address > 6) mux_address = 0;
+            for(int i = 0; i < 3; i++)
+            {
+                bool bit = (mux_addresses[mux_address] >> i) & 1U;
+                HAL_GPIO_WritePin(muxAddressOutputs[i].gpio, muxAddressOutputs[i].pin, (GPIO_PinState)bit);
+            }
+            mux_readings = 0;
+        }
     }
     void ADC_IRQHandler()
     {

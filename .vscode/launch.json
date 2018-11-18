@@ -14,6 +14,21 @@
             "configFiles": [
                 "board/st_nucleo_f3.cfg"
             ]
+        },
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "openocd",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/Moire.elf",
+            "name": "Debug STLINK",
+            "device": "STM32F303K8",
+            "preLaunchTask": "make",
+            "runToMain": true,
+            "configFiles": [
+                "interface/stlink-v2.cfg",
+                "target/stm32f3x.cfg"
+            ]
         }
     ]
 }

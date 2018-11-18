@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file           : main.h
-  * @brief          : Header for main.c file.
-  *                   This file contains the common defines of the application.
+  * File Name          : SPI.h
+  * Description        : This file provides code for the configuration
+  *                      of the SPI instances.
   ******************************************************************************
   ** This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -36,48 +36,46 @@
   *
   ******************************************************************************
   */
-
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __MAIN_H__
-#define __MAIN_H__
+#ifndef __spi_H
+#define __spi_H
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32f3xx_hal.h"
+#include "main.h"
 
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
 
-/* Private define ------------------------------------------------------------*/
-
-#define A_DAC_OUT_Pin GPIO_PIN_4
-#define A_DAC_OUT_GPIO_Port GPIOA
-#define B_DAC_OUT_Pin GPIO_PIN_5
-#define B_DAC_OUT_GPIO_Port GPIOA
-#define SWDIO_Pin GPIO_PIN_13
-#define SWDIO_GPIO_Port GPIOA
-
-/* ########################## Assert Selection ############################## */
-/**
-  * @brief Uncomment the line below to expanse the "assert_param" macro in the 
-  *        HAL drivers code
-  */
-/* #define USE_FULL_ASSERT    1U */
+extern SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN Private defines */
-#define F_CPU 72000000
-#define UINT12_MAX 4096
+
 /* USER CODE END Private defines */
 
-#ifdef __cplusplus
- extern "C" {
-#endif
-void _Error_Handler(char *, int);
+extern void _Error_Handler(char *, int);
 
-#define Error_Handler() _Error_Handler(__FILE__, __LINE__)
+void MX_SPI1_Init(void);
+
+/* USER CODE BEGIN Prototypes */
+
+/* USER CODE END Prototypes */
+
 #ifdef __cplusplus
 }
 #endif
+#endif /*__ spi_H */
 
-#endif /* __MAIN_H__ */
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

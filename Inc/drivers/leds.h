@@ -1,4 +1,4 @@
-// Copyright 2017 Olivier Gillet.
+// Copyright 2016 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
 //
@@ -24,52 +24,62 @@
 //
 // -----------------------------------------------------------------------------
 //
-// User interface
+// Drivers for the column of LEDs.
 
-#include "ui.h"
-#include "drivers/leds.h"
-#include <algorithm>
-#include "stmlib/system/system_clock.h"
+#ifndef MOIRE_DRIVERS_LEDS_H_
+#define MOIRE_DRIVERS_LEDS_H_
 
-using namespace std;
-using namespace stmlib;
-
-const int32_t kLongPressDuration = 1000;
+#include "stmlib/stmlib.h"
 
 namespace moire {
 
-Leds leds;
+const int kNumLEDs = 9;
 
-void UI::Init() {
-  switches_.Init();
-  system_clock.Init();
-  leds.Init();
-  fill(&press_time_[0], &press_time_[kNumSwitches], 0);
-}
+struct RGLedDefinition {
+  uint16_t address_r;
+  uint16_t address_g;
+};
 
-void UI::Poll() {
-  system_clock.Tick();
-  switches_.Debounce();
+struct SliderLedDefinition {
+  uint16_t address_r;
+  uint16_t address_g;
+};
 
-  for (int i = 0; i < kNumSwitches; ++i) {
-    if (switches_.pressed(i)) {
-      if (press_time_[i] != -1) {
-        ++press_time_[i];
-      }
-      // long press
-      if (press_time_[i] > kLongPressDuration) {
+enum LedColor {
+  LED_COLOR_OFF = 0,
+  LED_COLOR_RED = 0xff0000,
+  LED_COLOR_GREEN = 0x00ff00,
+  LED_COLOR_YELLOW = 0xffff00,
+};
 
-          press_time_[i] = -1;
-      }
-    } else {
-      // short press
-      if (press_time_[i] > 0) {
-
-      }
-      press_time_[i] = 0;
-    }
+class Leds {
+ public:
+  Leds() { }
+  ~Leds() { }
+  
+  void Init();
+  void Write();
+  void Clear();
+  void SetOutputLed(size_t index, uint16_t value);
+  void SetSliderLed(size_t index, uint16_t value);
+  void SetUILed(size_t index, uint16_t value);
+  
+  void set(int index, uint32_t color) {
+    colors_[index] = color;
   }
 
-  leds.Write();
-}
+  void mask(int index, uint32_t color) {
+    colors_[index] |= color;
+  }
+  
+ private:
+  uint32_t colors_[kNumLEDs];
+  RGLedDefinition ui_leds[kNumLEDs];
+  RGLedDefinition output_leds[kNumLEDs];
+  SliderLedDefinition slider_leds[kNumLEDs];
+  DISALLOW_COPY_AND_ASSIGN(Leds);
+};
+
 }  // namespace moire
+
+#endif  // MOIRE_DRIVERS_LEDS_H_

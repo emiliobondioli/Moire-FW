@@ -1,4 +1,4 @@
-// Copyright 2017 Olivier Gillet.
+// Copyright 2016 Olivier Gillet.
 //
 // Author: Olivier Gillet (ol.gillet@gmail.com)
 //
@@ -24,52 +24,71 @@
 //
 // -----------------------------------------------------------------------------
 //
-// User interface
+// Drivers for the column of LEDs.
 
-#include "ui.h"
 #include "drivers/leds.h"
+
 #include <algorithm>
+
+#include "stm32f3xx_hal.h"
+#include "spi.h"
+#include "gpio.h"
 #include "stmlib/system/system_clock.h"
 
-using namespace std;
-using namespace stmlib;
-
-const int32_t kLongPressDuration = 1000;
 
 namespace moire {
 
-Leds leds;
+using namespace std;
 
-void UI::Init() {
-  switches_.Init();
-  system_clock.Init();
-  leds.Init();
-  fill(&press_time_[0], &press_time_[kNumSwitches], 0);
+void Leds::Init() {
+  HAL_SPI_MspInit(&hspi1);
+  __HAL_SPI_ENABLE(&hspi1);
+  Clear();
 }
 
-void UI::Poll() {
-  system_clock.Tick();
-  switches_.Debounce();
+void Leds::Clear() {
+  fill(&colors_[0], &colors_[kNumLEDs], LED_COLOR_OFF);
+}
 
-  for (int i = 0; i < kNumSwitches; ++i) {
-    if (switches_.pressed(i)) {
-      if (press_time_[i] != -1) {
-        ++press_time_[i];
-      }
-      // long press
-      if (press_time_[i] > kLongPressDuration) {
+void Leds::SetOutputLed(size_t index, uint16_t value) {
+  
+}
 
-          press_time_[i] = -1;
-      }
-    } else {
-      // short press
-      if (press_time_[i] > 0) {
+void Leds::SetSliderLed(size_t index, uint16_t value) {
 
-      }
-      press_time_[i] = 0;
+}
+
+void Leds::SetUILed(size_t index, uint16_t value) {
+
+}
+uint16_t set_time = 0;
+uint16_t current_set = 0;
+uint16_t leds_data = 0b00000000000000;
+void Leds::Write() {
+   Clear();
+   set_time++;
+  if(set_time > 500) {
+    /* if(leds_data == 0b00000000000000){
+      leds_data = 0b00000000000000;
     }
-  }
-
-  leds.Write();
+    else leds_data = 0b00000000000000;*/
+    set_time = 0; 
+    //leds_data |= 0x1 << current_set + 1;
+    leds_data ^= 1UL << current_set + 1;
+    current_set++;
+   }
+   if(current_set > 15) current_set = 0;
+/*  set(current_set, LED_COLOR_RED);
+  uint16_t leds_data = 0;
+  for (int i = 0; i < 9; ++i) {
+    leds_data <<= 2;
+    leds_data |= (colors_[i] & LED_COLOR_RED) ? 1 : 0;
+    leds_data |= (colors_[i] & LED_COLOR_GREEN) ? 2 : 0;
+  }*/
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
+  //HAL_SPI_Transmit(&hspi1, (uint8_t *)leds_data, 1, HAL_MAX_DELAY); 
+  SPI1->DR = leds_data;
 }
+
 }  // namespace moire
