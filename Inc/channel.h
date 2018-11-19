@@ -77,6 +77,11 @@ struct Ratio {
   int q;
 };
 
+static inline float_t map(float_t x, float_t in_min, float_t in_max, float_t out_min, float_t out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
 class Channel {
  public:
   Channel() { }
@@ -87,6 +92,8 @@ class Channel {
   void Update();
   void SetChannelMode(ChannelMode _mode);
   ChannelMode GetChannelMode();
+  uint16_t GetValue();
+  bool GetGate();
   void SetParameters(float_t primary, float_t secondary)
   {
     parameters.primary = primary;
@@ -110,11 +117,6 @@ private:
   stmlib::HysteresisQuantizer ramp_division_quantizer_;
   float_t phase = 0;
   const float_t MAX_TIME = 16;
-
-  inline float_t map(float_t x, float_t in_min, float_t in_max, float_t out_min, float_t out_max, float_t shape)
-  {
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-  }
 
   inline float_t mapLog(float_t x, float_t in_min, float_t in_max, float_t out_min, float_t out_max) {
     return out_min + log(x / in_min) / log(in_max/in_min) * (out_max-out_min);

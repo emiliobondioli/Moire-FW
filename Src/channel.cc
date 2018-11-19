@@ -85,6 +85,16 @@ ChannelMode Channel::GetChannelMode()
   return mode;
 }
 
+uint16_t Channel::GetValue()
+{
+  return value;
+}
+
+bool Channel::GetGate()
+{
+  return gate_time > 0;
+}
+
 void Channel::ProcessFreeLFO()
 {
   phase += 1 / (MAX_TIME / parameters.primary) / kSampleRate;
@@ -115,9 +125,9 @@ void Channel::ShapeLFO()
 {
   const float_t slope = static_cast<float_t>(1 / (4028 / parameters.secondary)); 
   if(phase < slope) {
-    value = map(phase, 0, slope, 0, 4096, 0.5 - slope);
+    value = map(phase, 0, slope, 0, 4096);
   } else {
-    value = map(phase, slope, 1, 4096, 0, slope - 0.5);
+    value = map(phase, slope, 1, 4096, 0);
   }
 }
 
@@ -137,7 +147,7 @@ void Channel::ProcessGate()
   } 
   if(gate_time >= 0) {
     gate_time++;
-    if(gate_time > 25) {
+    if(gate_time > 35) {
       HAL_GPIO_WritePin(def.gate_gpio, def.gate_pin, GPIO_PIN_RESET);
       gate_time = -1;
     }

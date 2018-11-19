@@ -30,19 +30,24 @@
 #define MOIRE_UI_H_
 
 #include "stmlib/stmlib.h"
-
+#include "drivers/leds.h"
 #include "drivers/switches.h"
+#include "channel.h"
 
 namespace moire {
+
 
 class UI {
  public:
   UI() { }
   ~UI() { }
-  
+
+  Leds leds;
+ 
   void Init();
   void Poll();
   void DoEvents();
+  void SetChannelLeds(uint16_t index, Channel* channel);
   
   inline const Switches& switches() const { return switches_; }
   

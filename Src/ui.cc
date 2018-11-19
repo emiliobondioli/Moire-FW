@@ -27,7 +27,6 @@
 // User interface
 
 #include "ui.h"
-#include "drivers/leds.h"
 #include <algorithm>
 #include "stmlib/system/system_clock.h"
 
@@ -37,15 +36,32 @@ using namespace stmlib;
 const int32_t kLongPressDuration = 1000;
 
 namespace moire {
-
-Leds leds;
-
+uint16_t out_pwm[3];
 void UI::Init() {
   switches_.Init();
   system_clock.Init();
   leds.Init();
   fill(&press_time_[0], &press_time_[kNumSwitches], 0);
 }
+
+void UI::SetChannelLeds(uint16_t index, Channel* channel) {
+    leds.SetUILed(index, (uint16_t) channel->GetChannelMode());
+    uint16_t out_value = channel->GetValue();
+    out_pwm[index]+=2.5;
+    if(out_pwm[index] > map(out_value, 0, UINT12_MAX, 50, 0)) {
+      out_pwm[index] = 0;
+      leds.SetOutputLed(index, 3);
+    } else {
+      leds.SetOutputLed(index, 0);
+    }
+    
+    /* else {
+      leds.SetOutputLed(index, 0);
+       if(out_value > 2048) leds.SetOutputLed(index, 2);
+      else leds.SetOutputLed(index, 1); 
+    }*/
+    leds.SetSliderLed(index, channel->GetGate());
+  }
 
 void UI::Poll() {
   system_clock.Tick();

@@ -46,49 +46,69 @@ void Leds::Init() {
   Clear();
 }
 
+RGLedDefinition ui_leds[] = {
+  {5, 4, 0},
+  {7, 6, 0},
+  {2, 3, 0}
+};
+
+RGLedDefinition output_leds[] = {
+  {9, 8, 0},
+  {10, 11, 0},
+  {12, 13, 0}
+};
+
+SliderLedDefinition slider_leds[] = {
+  {14, 0},
+  {15, 0},
+  {1, 0}
+};
+
 void Leds::Clear() {
-  fill(&colors_[0], &colors_[kNumLEDs], LED_COLOR_OFF);
+
 }
 
 void Leds::SetOutputLed(size_t index, uint16_t value) {
-  
+  output_leds[index].color = value;
 }
 
 void Leds::SetSliderLed(size_t index, uint16_t value) {
-
+  slider_leds[index].color = value;
 }
 
 void Leds::SetUILed(size_t index, uint16_t value) {
-
+  ui_leds[index].color = value;
 }
-uint16_t set_time = 0;
-uint16_t current_set = 0;
-uint16_t leds_data = 0b00000000000000;
+
 void Leds::Write() {
-   Clear();
-   set_time++;
-  if(set_time > 500) {
-    /* if(leds_data == 0b00000000000000){
-      leds_data = 0b00000000000000;
-    }
-    else leds_data = 0b00000000000000;*/
-    set_time = 0; 
-    //leds_data |= 0x1 << current_set + 1;
-    leds_data ^= 1UL << current_set + 1;
-    current_set++;
-   }
-   if(current_set > 15) current_set = 0;
-/*  set(current_set, LED_COLOR_RED);
-  uint16_t leds_data = 0;
-  for (int i = 0; i < 9; ++i) {
-    leds_data <<= 2;
-    leds_data |= (colors_[i] & LED_COLOR_RED) ? 1 : 0;
-    leds_data |= (colors_[i] & LED_COLOR_GREEN) ? 2 : 0;
-  }*/
+  uint16_t leds_data = 0b00000000000000;
+  for(int i = 0; i < 3; i++) {
+    leds_data = GetRGLedData(ui_leds[i], leds_data);
+    leds_data = GetRGLedData(output_leds[i], leds_data);
+    leds_data = GetSliderLedData(slider_leds[i], leds_data);
+  }
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
   //HAL_SPI_Transmit(&hspi1, (uint8_t *)leds_data, 1, HAL_MAX_DELAY); 
   SPI1->DR = leds_data;
 }
-
 }  // namespace moire
+
+
+/*
+  // Clear();
+   set_time++;
+  if(set_time > 500) {
+    if(leds_data == 0b00000000000000){
+      leds_data = 0b00000000000000;
+    }
+    else leds_data = 0b00000000000000;
+    set_time = 0; 
+    // SET
+    //leds_data |= 0x1 << current_set + 1;
+    // TOGGLE
+    //leds_data ^= 1UL << current_set + 1;
+    current_set++;
+  }
+  if(current_set > 15) current_set = 0;
+*/

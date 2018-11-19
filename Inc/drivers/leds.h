@@ -33,16 +33,15 @@
 
 namespace moire {
 
-const int kNumLEDs = 9;
-
 struct RGLedDefinition {
   uint16_t address_r;
   uint16_t address_g;
+  uint16_t color;
 };
 
 struct SliderLedDefinition {
-  uint16_t address_r;
-  uint16_t address_g;
+  uint16_t address;
+  uint16_t color;
 };
 
 enum LedColor {
@@ -63,20 +62,32 @@ class Leds {
   void SetOutputLed(size_t index, uint16_t value);
   void SetSliderLed(size_t index, uint16_t value);
   void SetUILed(size_t index, uint16_t value);
-  
-  void set(int index, uint32_t color) {
-    colors_[index] = color;
+
+  inline uint16_t GetRGLedData(RGLedDefinition led, uint16_t leds_data) {
+    if(!led.color) return leds_data;
+    switch(led.color) {
+      case 1: 
+        leds_data |= 0x1 << led.address_r;
+      break;
+      case 2: 
+        leds_data |= 0x1 << led.address_g;
+      break;
+      case 3: 
+        leds_data |= 0x1 << led.address_r;
+        leds_data |= 0x1 << led.address_g;
+      break;
+      default:
+      return leds_data;
+    }
+    return leds_data;
   }
 
-  void mask(int index, uint32_t color) {
-    colors_[index] |= color;
+  inline uint16_t GetSliderLedData(SliderLedDefinition led, uint16_t leds_data) {
+    if(!led.color) return leds_data;
+    return leds_data |= 0x1 << led.address;
   }
   
  private:
-  uint32_t colors_[kNumLEDs];
-  RGLedDefinition ui_leds[kNumLEDs];
-  RGLedDefinition output_leds[kNumLEDs];
-  SliderLedDefinition slider_leds[kNumLEDs];
   DISALLOW_COPY_AND_ASSIGN(Leds);
 };
 

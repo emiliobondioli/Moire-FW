@@ -15,9 +15,9 @@ UI ui;
 MuxAdc mux;
 
 const ChannelDefinition channel_defs[] = {
-    {&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, GPIOA, GPIO_PIN_10, GPIOB, GPIO_PIN_0, 0, 0},
-    {&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, GPIOA, GPIO_PIN_11, GPIOB, GPIO_PIN_1, 1, 4},
-    {&hdac2, DAC_CHANNEL_1, DAC_ALIGN_12B_R, GPIOA, GPIO_PIN_11, GPIOA, GPIO_PIN_15, 2, 5}
+    {&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, GPIOA, GPIO_PIN_10, GPIOB, GPIO_PIN_0, 4, 3},
+    {&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, GPIOA, GPIO_PIN_11, GPIOB, GPIO_PIN_1, 2, 5},
+    {&hdac2, DAC_CHANNEL_1, DAC_ALIGN_12B_R, GPIOA, GPIO_PIN_11, GPIOA, GPIO_PIN_15, 1, 0}
 };
 
 Channel channel_a;
@@ -47,9 +47,9 @@ void Moire::Update()
   {
     tick = 0;
     ui.Poll();
-    for (size_t i = 0; i < 1; i++)
+    for (size_t i = 0; i < kNumChannels; i++)
     {
-      int primary = AddCV(mux.value(i), mux.value(1));
+      int primary = AddCV(mux.value_mux(channels[i]->def.primary_mux), mux.value(i));
       int secondary = mux.value_mux(channels[i]->def.secondary_mux);
       channels[i]->SetParameters(primary, secondary);
       if (ui.switches().released(i))
@@ -59,12 +59,14 @@ void Moire::Update()
         channels[i]->SetChannelMode(static_cast<ChannelMode>(newMode));
       }
       channels[i]->Update();
+      ui.SetChannelLeds(i, channels[i]);
     }
   }
 }
 
 int Moire::AddCV(int param, int cv) {
-  int sum = param + cv;
+/*   int sum = param + cv - 2048;
+ */  int sum = param;
   CONSTRAIN(sum, 0, UINT12_MAX);
   return sum;
 }
