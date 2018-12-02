@@ -47,29 +47,19 @@ void Leds::Init() {
 }
 
 RGLedDefinition ui_leds[] = {
-  {5, 4, 0},
-  {7, 6, 0},
-  {2, 3, 0}
-};
-
-RGLedDefinition output_leds[] = {
-  {9, 8, 0},
-  {10, 11, 0},
-  {12, 13, 0}
+  {5, 6, 0},
+  {3, 4, 0},
+  {1, 2, 0}
 };
 
 SliderLedDefinition slider_leds[] = {
-  {14, 0},
-  {15, 0},
-  {1, 0}
+  {9, 0},
+  {8, 0},
+  {7, 0}
 };
 
 void Leds::Clear() {
 
-}
-
-void Leds::SetOutputLed(size_t index, uint16_t value) {
-  output_leds[index].color = value;
 }
 
 void Leds::SetSliderLed(size_t index, uint16_t value) {
@@ -84,11 +74,10 @@ void Leds::Write() {
   uint16_t leds_data = 0b00000000000000;
   for(int i = 0; i < 3; i++) {
     leds_data = GetRGLedData(ui_leds[i], leds_data);
-    leds_data = GetRGLedData(output_leds[i], leds_data);
     leds_data = GetSliderLedData(slider_leds[i], leds_data);
   }
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_SET);
   //HAL_SPI_Transmit(&hspi1, (uint8_t *)leds_data, 1, HAL_MAX_DELAY); 
   SPI1->DR = leds_data;
 }

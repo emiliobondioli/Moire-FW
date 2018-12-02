@@ -42,6 +42,7 @@ void Channel::Init(ChannelDefinition _def)
   def = _def;
   ramp_division_quantizer_.Init();
   input.Init(def.input_gpio, def.input_pin);
+  HAL_GPIO_WritePin(def.gate_gpio, def.gate_pin, GPIO_PIN_RESET);
 }
 
 void Channel::Update()
@@ -53,10 +54,10 @@ void Channel::Update()
     ProcessFreeLFO();
     break;
   case ENVELOPE:
-    value = 4095;
+    value = 4096;
     break;
   case SHAPE_VIEW:
-    value = parameters.secondary;
+    value = parameters.primary;
     break;
   case TAP_LFO:
     ProcessTapLFO(input.phase_inc);
@@ -95,9 +96,13 @@ bool Channel::GetGate()
   return gate_time > 0;
 }
 
+float ScaleParameter(int param) {
+  return map_log(param, 4096, 4095);
+}
+
 void Channel::ProcessFreeLFO()
 {
-  phase += 1 / (MAX_TIME / parameters.primary) / kSampleRate;
+  phase += 1 / (MAX_TIME / ScaleParameter(parameters.primary + 1)) / kSampleRate;
   const float_t slope = static_cast<float_t>(1 / (4028 / parameters.secondary)); 
   ShapeLFO();
 }
@@ -134,20 +139,18 @@ void Channel::ShapeLFO()
 
 void Channel::ResetPhase()
 {
+      reset = 0;
+    HAL_GPIO_WritePin(def.gate_gpio, def.gate_pin, GPIO_PIN_SET);
+    gate_time = 0;
   phase = 0.0;
   reset = 1;
 }
 
 void Channel::ProcessGate()
 {
-  if(reset) {
-    reset = 0;
-    HAL_GPIO_WritePin(def.gate_gpio, def.gate_pin, GPIO_PIN_SET);
-    gate_time = 0;
-  } 
   if(gate_time >= 0) {
     gate_time++;
-    if(gate_time > 35) {
+    if(gate_time > 500) {
       HAL_GPIO_WritePin(def.gate_gpio, def.gate_pin, GPIO_PIN_RESET);
       gate_time = -1;
     }

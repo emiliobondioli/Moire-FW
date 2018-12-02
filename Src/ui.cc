@@ -47,19 +47,6 @@ void UI::Init() {
 void UI::SetChannelLeds(uint16_t index, Channel* channel) {
     leds.SetUILed(index, (uint16_t) channel->GetChannelMode());
     uint16_t out_value = channel->GetValue();
-    out_pwm[index]+=2.5;
-    if(out_pwm[index] > map(out_value, 0, UINT12_MAX, 50, 0)) {
-      out_pwm[index] = 0;
-      leds.SetOutputLed(index, 3);
-    } else {
-      leds.SetOutputLed(index, 0);
-    }
-    
-    /* else {
-      leds.SetOutputLed(index, 0);
-       if(out_value > 2048) leds.SetOutputLed(index, 2);
-      else leds.SetOutputLed(index, 1); 
-    }*/
     leds.SetSliderLed(index, channel->GetGate());
   }
 
