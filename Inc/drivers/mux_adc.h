@@ -41,7 +41,7 @@ typedef struct MuxAddressOutputDefinition {
 
 const int kNumAdcChannels = 4;
 const int kNumMuxPots = 3;
-const int kNumMuxSliders = 3;
+const int kNumMuxSliders = 4;
 const int kNumMuxAddresses = kNumMuxPots + kNumMuxSliders;
 const int ADC_NUM_SAMPLES = 4;
 const int ADC_CONVERTED_DATA_BUFFER_SIZE = 32;
@@ -69,14 +69,6 @@ public:
     return static_cast<float>(value(channel)) / UINT12_MAX;
   }
   
-  inline uint8_t pot_index() const {
-    return pot_index_;
-  }
-  
-  inline uint8_t slider_index() const {
-    return slider_index_;
-  }
-
   static uint16_t mux_address;
   static uint16_t ADC1Values[kNumAdcChannels];
   static uint16_t MuxValues[kNumMuxAddresses];
@@ -85,9 +77,6 @@ public:
   uint8_t pot_index_;
   uint8_t slider_index_;
 
-  static uint8_t mux_address_to_pot_index_[kNumMuxPots];
-  static uint8_t mux_address_to_slider_index_[kNumMuxSliders];
-  
   DISALLOW_COPY_AND_ASSIGN(MuxAdc);
 };
 

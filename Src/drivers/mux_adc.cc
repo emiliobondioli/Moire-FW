@@ -31,21 +31,7 @@
 
 namespace moire {
 
-/* static */
-uint8_t MuxAdc::mux_address_to_pot_index_[kNumMuxPots] = {
-    1,
-    2,
-    3
-};
-
-/* static */
-uint8_t MuxAdc::mux_address_to_slider_index_[kNumMuxSliders] = {
-    4,
-    5,
-    6
-};
 uint16_t mux_address = 0;
-
 const MuxAddressOutputDefinition muxAddressOutputs[] = {
     {GPIOA, GPIO_PIN_7},
     {GPIOA, GPIO_PIN_8},
@@ -68,7 +54,7 @@ void MuxAdc::Init() {
 }
 
 uint16_t mux_readings = 0;
-uint16_t mux_addresses[] = {0,1,2,3,4,6};
+uint16_t mux_addresses[] = {0,1,2,3,4,5,6,7};
 
 extern "C"
 {
@@ -88,7 +74,7 @@ extern "C"
         mux_readings++;
         if(mux_readings >= ADC_NUM_SAMPLES) {
             mux_address++;
-            if(mux_address > 6) mux_address = 0;
+            if(mux_address > kNumMuxAddresses) mux_address = 0;
             for(int i = 0; i < 3; i++)
             {
                 bool bit = (mux_addresses[mux_address] >> i) & 1U;
