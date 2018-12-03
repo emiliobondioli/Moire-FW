@@ -33,6 +33,7 @@
 #include "stmlib/dsp/hysteresis_quantizer.h"
 #include "dac.h"
 #include "tim.h"
+#include "turing.h"
 #include "stmlib/utils/gate_flags.h"
 #include "drivers/gate_input.h"
 
@@ -44,6 +45,8 @@ using namespace stmlib;
 namespace moire {
 
 const float_t kSampleRate = 31250.0f;
+const size_t kMaxTouringLength = 16;
+const uint16_t MAX_PARAM_VALUE = 4096;
 
 struct ChannelParameters
 {
@@ -55,7 +58,7 @@ enum ChannelMode
 {
     LFO,
     ENVELOPE,
-    SHAPE_VIEW,
+    TURING,
     TAP_LFO,
     NUM_MODES
 };
@@ -109,16 +112,20 @@ class Channel {
 private:
   ChannelMode mode = LFO;
   float_t value = 0;
+  bool gate;
   int32_t gate_time = 0;
   bool reset = true;
   void Out();
+  void GateOut();
   void ProcessFreeLFO();
   void ProcessTapLFO(float_t _phase_inc);
   void ShapeLFO();
   void ProcessGate();
   void ResetPhase();
+  void ProcessTuring();
   DISALLOW_COPY_AND_ASSIGN(Channel);
   ChannelParameters parameters;
+  TuringMachine tm;
   stmlib::HysteresisQuantizer ramp_division_quantizer_;
   float_t phase = 0;
   const float_t MAX_TIME = 16;

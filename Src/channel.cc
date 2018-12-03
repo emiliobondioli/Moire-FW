@@ -41,6 +41,7 @@ void Channel::Init(ChannelDefinition _def)
 {
   def = _def;
   ramp_division_quantizer_.Init();
+  tm.Init();
   input.Init(def.input_gpio, def.input_pin);
   HAL_GPIO_WritePin(def.gate_gpio, def.gate_pin, GPIO_PIN_RESET);
 }
@@ -54,17 +55,16 @@ void Channel::Update()
     ProcessFreeLFO();
     break;
   case ENVELOPE:
-    value = 4096;
+    value = MAX_PARAM_VALUE;
     break;
-  case SHAPE_VIEW:
-    value = parameters.primary;
+  case TURING:
+    ProcessTuring();
     break;
   case TAP_LFO:
     ProcessTapLFO(input.phase_inc);
     break;
   }
   if(phase >= 1.0) ResetPhase();
-  ProcessGate();
   Out();
 }
 
@@ -93,18 +93,27 @@ uint16_t Channel::GetValue()
 
 bool Channel::GetGate()
 {
-  return gate_time > 0;
+  switch (mode)
+  {
+    case TAP_LFO:
+      return input.current_state == GPIO_PIN_SET;
+      break;
+    default:
+      return gate;
+      break;
+  }
 }
 
 float ScaleParameter(int param) {
-  return map_log(param, 4096, 4095);
+  return map_log(param, MAX_PARAM_VALUE, MAX_PARAM_VALUE-1);
 }
 
 void Channel::ProcessFreeLFO()
 {
-  phase += 1 / (MAX_TIME / ScaleParameter(parameters.primary + 1)) / kSampleRate;
+  phase += 1 / (MAX_TIME / ScaleParameter(MAX_PARAM_VALUE - parameters.primary + 1)) / kSampleRate;
   const float_t slope = static_cast<float_t>(1 / (4028 / parameters.secondary)); 
   ShapeLFO();
+  ProcessGate();
 }
 
 Ratio divider_ratios[] = {
@@ -124,35 +133,52 @@ void Channel::ProcessTapLFO(float_t _phase_inc)
   phase += _phase_inc * r.ratio;
   const float_t slope = static_cast<float_t>(1 / (4028 / parameters.secondary)); 
   ShapeLFO();
+  ProcessGate();
 }
 
 void Channel::ShapeLFO()
 {
   const float_t slope = static_cast<float_t>(1 / (4028 / parameters.secondary)); 
   if(phase < slope) {
-    value = map(phase, 0, slope, 0, 4096);
+    value = map(phase, 0, slope, 0, MAX_PARAM_VALUE);
   } else {
-    value = map(phase, slope, 1, 4096, 0);
+    value = map(phase, slope, 1, MAX_PARAM_VALUE, 0);
   }
 }
 
 
 void Channel::ResetPhase()
 {
-      reset = 0;
-    HAL_GPIO_WritePin(def.gate_gpio, def.gate_pin, GPIO_PIN_SET);
-    gate_time = 0;
+  gate = true;
+  gate_time = 0;
   phase = 0.0;
-  reset = 1;
 }
 
 void Channel::ProcessGate()
 {
   if(gate_time >= 0) {
     gate_time++;
-    if(gate_time > 500) {
-      HAL_GPIO_WritePin(def.gate_gpio, def.gate_pin, GPIO_PIN_RESET);
+    if(gate_time > 40) {
+      gate = false;
       gate_time = -1;
     }
   }
+  GateOut();
+}
+
+void Channel::GateOut()
+{
+  HAL_GPIO_WritePin(def.gate_gpio, def.gate_pin, (GPIO_PinState) gate);
+}
+
+void Channel::ProcessTuring()
+{
+  if(input.clocked) {
+    size_t chance = map_log(parameters.primary, MAX_PARAM_VALUE, 100);
+    tm.SetChance(chance);
+    tm.Next();
+    gate = tm.GetGate();
+  }
+  value = tm.GetCV();
+  GateOut();
 }
