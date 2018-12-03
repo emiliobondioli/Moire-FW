@@ -47,9 +47,9 @@ void Leds::Init() {
 }
 
 RGLedDefinition ui_leds[] = {
-  {5, 6, 0},
+  {1, 2, 0},
   {3, 4, 0},
-  {1, 2, 0}
+  {5, 6, 0}
 };
 
 SliderLedDefinition slider_leds[] = {
