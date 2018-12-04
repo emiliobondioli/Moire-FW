@@ -46,17 +46,21 @@ class GateInput {
   ~GateInput() { }
  
   float_t phase_inc;
-  GPIO_PinState current_state;
+  bool current_state;
   bool clocked = false;
 
   void Init(GPIO_TypeDef* input_gpio, uint16_t input_pin);
   void Read(const float_t sample_rate);
+  void SetInputSource(bool* _clock_source);
   
  private:
   uint8_t pulses;
   uint32_t timer;
   uint32_t period;
   GateInputDefinition def;
+  bool ReadExternal();
+  bool ReadInternal();
+  bool* clock_source = NULL;
   DISALLOW_COPY_AND_ASSIGN(GateInput);
 };
 

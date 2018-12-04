@@ -40,9 +40,9 @@ void GateInput::Init(GPIO_TypeDef* input_gpio, uint16_t input_pin) {
 }
 
 void GateInput::Read(const float_t sample_rate) {
-  GPIO_PinState state = HAL_GPIO_ReadPin(def.gpio, def.pin);
+  bool state = clock_source == NULL ? ReadExternal() : ReadInternal();
   if(state != current_state) {
-    if(current_state == GPIO_PIN_RESET) {
+    if(!current_state) {
       if(pulses > 0) {
         pulses = 0;
         phase_inc =  static_cast<float_t>(1.0 / timer);
@@ -60,6 +60,22 @@ void GateInput::Read(const float_t sample_rate) {
   if(timer > period) {
     phase_inc =  static_cast<float_t>(1.0 / timer);
   }
+}
+
+void GateInput::SetInputSource(bool* source) {
+  if(clock_source != source) {
+    clock_source = source;
+  } else {
+    clock_source = NULL;
+  }
+}
+
+bool GateInput::ReadExternal() {
+  return (bool) HAL_GPIO_ReadPin(def.gpio, def.pin);
+}
+
+bool GateInput::ReadInternal() {
+  return *clock_source;
 }
 
 }  // namespace moire

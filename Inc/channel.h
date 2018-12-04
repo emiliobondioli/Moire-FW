@@ -102,6 +102,7 @@ class Channel {
   ChannelMode GetChannelMode();
   uint16_t GetValue();
   bool GetGate();
+  bool gate;
   void SetParameters(float_t primary, float_t secondary)
   {
     parameters.primary = primary;
@@ -112,7 +113,6 @@ class Channel {
 private:
   ChannelMode mode = LFO;
   float_t value = 0;
-  bool gate;
   int32_t gate_time = 0;
   bool reset = true;
   void Out();
