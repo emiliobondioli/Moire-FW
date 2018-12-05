@@ -93,7 +93,7 @@ uint16_t Channel::GetValue()
 
 bool Channel::GetGate()
 {
-  switch (mode)
+/*   switch (mode)
   {
     case TAP_LFO:
       return input.current_state == GPIO_PIN_SET;
@@ -101,7 +101,8 @@ bool Channel::GetGate()
     default:
       return gate;
       break;
-  }
+  } */
+  return gate;
 }
 
 float ScaleParameter(int param) {

@@ -65,6 +65,9 @@ void Moire::Update()
           ChannelMode currentMode = channels[i]->GetChannelMode();
           int newMode = currentMode + 1 < NUM_MODES ? currentMode + 1 : 0;
           channels[i]->SetChannelMode(static_cast<ChannelMode>(newMode));
+        } 
+        if(selected_channel == i) {
+          selected_channel = -1;
         }
         ui_locks[i] = false;
       }
