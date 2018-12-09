@@ -46,12 +46,20 @@ namespace moire {
 
 const float_t kSampleRate = 31250.0f;
 const size_t kMaxTouringLength = 16;
+const size_t kNumSettings = 3;
 const uint16_t MAX_PARAM_VALUE = 4096;
 
 struct ChannelParameters
 {
   float_t primary;
   float_t secondary;
+};
+
+struct ChannelSettings
+{
+  size_t alpha;
+  size_t beta;
+  size_t gamma;
 };
 
 enum ChannelMode
@@ -108,6 +116,18 @@ class Channel {
     parameters.primary = primary;
     parameters.secondary = secondary;
   }
+  void NextAlphaSetting() {
+    settings[(size_t)mode].alpha = settings[(size_t)mode].alpha < kNumSettings ? settings[(size_t)mode].alpha + 1 : 0;
+  }
+  void NextBetaSetting() {
+    settings[(size_t)mode].beta = settings[(size_t)mode].beta < kNumSettings ? settings[(size_t)mode].beta + 1 : 0;
+  }
+  void NextGammaSetting() {
+    settings[(size_t)mode].gamma = settings[(size_t)mode].gamma < kNumSettings ? settings[(size_t)mode].gamma + 1 : 0;
+  }
+  ChannelSettings GetSettings() {
+    return settings[(size_t)mode];
+  }
   GateInput input;
 
 private:
@@ -125,6 +145,7 @@ private:
   void ProcessTuring();
   DISALLOW_COPY_AND_ASSIGN(Channel);
   ChannelParameters parameters;
+  ChannelSettings settings[NUM_MODES];
   TuringMachine tm;
   stmlib::HysteresisQuantizer ramp_division_quantizer_;
   float_t phase = 0;

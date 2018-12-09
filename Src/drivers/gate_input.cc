@@ -62,12 +62,14 @@ void GateInput::Read(const float_t sample_rate) {
   }
 }
 
-void GateInput::SetInputSource(bool* source) {
-  if(clock_source != source) {
+bool GateInput::SetInputSource(bool* source) {
+  bool toggle = clock_source != source;
+  if(toggle) {
     clock_source = source;
   } else {
     clock_source = NULL;
   }
+  return toggle;
 }
 
 bool GateInput::ReadExternal() {

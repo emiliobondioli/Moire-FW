@@ -15,6 +15,7 @@ class Moire {
   private:
     int AddCV(int param, int cv);
     void SetTriggerSource(int channel_id);
+    void SetChannelMode(int channel_id);
 };
 
 #endif /* __MOIRE_H__ */

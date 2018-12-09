@@ -51,7 +51,7 @@ class GateInput {
 
   void Init(GPIO_TypeDef* input_gpio, uint16_t input_pin);
   void Read(const float_t sample_rate);
-  void SetInputSource(bool* _clock_source);
+  bool SetInputSource(bool* _clock_source);
   
  private:
   uint8_t pulses;
